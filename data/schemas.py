@@ -1,12 +1,14 @@
-from sqlmodel import SQLModel,Form,Field
+from sqlmodel import SQLModel
 from data.models import *
 from typing import Optional
+from fastapi import Form
 
 class VehiculoCreate(SQLModel):
-    marca: str = Form(...), 
-    modelo: Optional[str] = Form(...),
-    Tipo_combustible: Optional[Tipo_combustibleEnum] = Form(None),
-    Tan_size: Optional[float] = Form(default=0.0),
+    marca: str = Form(...)
+    modelo: Optional[str] = Form(...)
+    year: int = Form(...)
+    Tipo_combustible: Optional[Tipo_combustibleEnum] = Form(None)
+    Tan_size: Optional[float] = Form(default=0.0)
 
 class VehiculoRead(SQLModel):
     id: Optional[int] = None
