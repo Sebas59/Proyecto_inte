@@ -7,7 +7,7 @@ from typing import List
 from data.models import Vehiculo
 from data.schemas import VehiculoCreate
 
-async def crear_vehiculo(vehiculo:VehiculoCreate, session:AsyncSession)->Vehiculo:
+async def crear_vehiculo_db(vehiculo:VehiculoCreate, session:AsyncSession)->Vehiculo:
     nuevo_vehiculo = Vehiculo(**vehiculo.dict())
     session.add(nuevo_vehiculo)
     try:
