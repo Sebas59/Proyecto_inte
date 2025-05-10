@@ -4,7 +4,7 @@ from sqlalchemy import Enum as SqlEnum
 from datetime import datetime
 from enum import Enum
 
-class Tipo_combustibleEnum(Enum):
+class Tipo_combustibleEnum(str,Enum):
     gasolina = "Gasolina"
     diesel = "Diesel"
     
@@ -15,5 +15,5 @@ class Vehiculo(SQLModel, table=True):
     marca: str
     modelo: str
     year: int
-    Tipo_combustible: str = Field(sa_column=SqlEnum(Tipo_combustibleEnum))
+    Tipo_combustible: Optional[Tipo_combustibleEnum] = Field(default=None)
     Tan_size: float
