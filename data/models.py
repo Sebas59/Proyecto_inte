@@ -4,7 +4,7 @@ from sqlalchemy import Enum as SqlEnum
 from datetime import datetime
 from enum import Enum
 
-class Tipo_combustibleEnum(str,Enum):
+class Tipo_combustibleEnum(Enum):
     gasolina = "Gasolina"
     diesel = "Diesel"
     
