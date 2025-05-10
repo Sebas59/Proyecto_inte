@@ -15,5 +15,5 @@ class Vehiculo(SQLModel, table=True):
     marca: str
     modelo: str
     year: int
-    Tipo_combustible: Optional[Tipo_combustibleEnum] = Field(sa_column=SqlEnum(Tipo_combustibleEnum))
+    Tipo_combustible: str = Field(sa_column=SqlEnum(Tipo_combustibleEnum))
     Tan_size: float
