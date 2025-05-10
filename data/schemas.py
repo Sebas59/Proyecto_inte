@@ -6,7 +6,7 @@ class VehiculoCreate(SQLModel):
     marca: str
     modelo: str
     year: int
-    Tipo_combustible: Tipo_combustibleEnum
+    Tipo_combustible: Optional[Tipo_combustibleEnum] = None
     Tan_size: float
 
 class VehiculoRead(SQLModel):
