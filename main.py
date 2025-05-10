@@ -18,6 +18,6 @@ async def lifespan(app:FastAPI):
     yield
 app = FastAPI(lifespan=lifespan)
 
-@app.post("/vehiculos/", response_model=VehiculoRead,tags=["Vehiculos"])
+@app.post("/vehiculos/", response_model=Vehiculo,tags=["Vehiculos"])
 async def crear_vehiculo(vehiculo:VehiculoCreate, session:AsyncSession=Depends(get_session))->Vehiculo:
     return await crear_vehiculo_db(vehiculo, session)
