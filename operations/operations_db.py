@@ -17,3 +17,8 @@ async def crear_vehiculo_db(vehiculo:VehiculoCreate, session:AsyncSession)->Vehi
     except IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al crear el vehiculo")
+    
+async def obtener_vehiculos_db(session:AsyncSession)->List[Vehiculo]:
+    result = await session.execute(select(Vehiculo))
+    vehiculos = result.scalars().all()
+    return vehiculos
