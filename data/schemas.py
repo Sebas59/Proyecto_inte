@@ -6,7 +6,7 @@ class VehiculoCreate(SQLModel):
     marca: str
     modelo: str
     year: int
-    Tipo_combustible: str
+    Tipo_combustible: Tipo_combustibleEnum
     Tan_size: float
 
 class VehiculoRead(SQLModel):
@@ -14,7 +14,7 @@ class VehiculoRead(SQLModel):
     marca: str
     modelo: str
     year: int
-    Tipo_combustible: str
+    Tipo_combustible: Tipo_combustibleEnum
     Tan_size: float
 
     class Config:
