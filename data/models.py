@@ -2,9 +2,9 @@ from sqlmodel import SQLModel, Field,Relationship
 from typing import Optional
 from sqlalchemy import Enum as SqlEnum
 from datetime import datetime
-import enum
+from enum import Enum
 
-class Tipo_combustibleEnum(str, enum.Enum):
+class Tipo_combustibleEnum(str,Enum):
     gasolina = "Gasolina"
     diesel = "Diesel"
     
