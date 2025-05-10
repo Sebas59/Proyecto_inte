@@ -13,5 +13,7 @@ async def crear_vehiculo_db(vehiculo:VehiculoCreate, session:AsyncSession)->Vehi
     try:
         await session.commit()
         await session.refresh(nuevo_vehiculo)
+        return nuevo_vehiculo
     except IntegrityError:
-        raise HTTPException(status_code=400, detail="Error al crear el vehiculo")
+        await session.rollback()
+        raise HTTPException(status_code=404, detail="Error al crear el vehiculo")
