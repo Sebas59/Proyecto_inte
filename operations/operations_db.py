@@ -144,7 +144,7 @@ async def obtener_vehiculos_con_costo_combustible_db(marca:str,modelo:str,ciudad
     resultado : List[CostoTanqueo] = []
     for vehiculo in vehiculos:
         result_combustible = await session.execute(
-            select(Combustible).where(and_(Combustible.ciudad.ilike(f"%{ciudad}%"), Combustible.localidad.ilike(f"%{localidad}%"),Combustible.tipo_combustible==vehiculo.tipo_combustible))
+            select(Combustible).where(and_(Combustible.ciudad.ilike(f"%{ciudad}%"), Combustible.localidad.ilike(f"%{localidad}%"),Combustible.tipo_combustible==vehiculo.Tipo_combustible))
         )
     combustible = result_combustible.scalars_one_or_none()
     if combustible:
