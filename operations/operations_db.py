@@ -54,3 +54,15 @@ async def actualizar_vehiculo_db(id:int, vehiculo:VehiculoCreate, session:AsyncS
     except IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al actualizar el vehiculo")
+    
+async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
+    vehiculo_a_eliminar = await session.get(Vehiculo, id)
+    if not vehiculo_a_eliminar:
+        raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
+    await session.delete(vehiculo_a_eliminar)
+    try:
+        await session.commit()
+        return vehiculo_a_eliminar
+    except IntegrityError:
+        await session.rollback()
+        raise HTTPException(status_code=404, detail="Error al eliminar el vehiculo")
