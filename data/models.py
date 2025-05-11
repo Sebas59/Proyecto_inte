@@ -5,8 +5,10 @@ from datetime import datetime
 from enum import Enum
 
 class Tipo_combustibleEnum(str,Enum):
-    gasolina = "Gasolina"
+    corriente = "Corriente"
     diesel = "Diesel"
+    super = "Super"
+    gas= "Gas"
     
 
 class Vehiculo(SQLModel, table=True):
