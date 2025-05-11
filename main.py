@@ -13,6 +13,7 @@ from typing import List,Optional
 from operations.operations_db import *
 from data.models import *
 from sqlmodel import Field, SQLModel,Session,select
+
 @asynccontextmanager
 async def lifespan(app:FastAPI):
     await init_db()
@@ -26,3 +27,7 @@ async def crear_vehiculo(vehiculo:VehiculoCreate=Depends(vehiculo_create_form), 
 @app.get("/vehiculos/", response_model=List[Vehiculo], tags=["Vehiculos"])
 async def obtener_vehiculos(session:AsyncSession=Depends(get_session))->List[Vehiculo]:
     return await obtener_vehiculos_db(session)
+
+@app.put("/vehiculos/{id}", response_model=Vehiculo, tags=["Vehiculos"])
+async def actualizar_vehiculo(id:int, vehiculo:VehiculoCreate=Depends(vehiculo_create_form), session:AsyncSession=Depends(get_session))->Vehiculo:
+    return await actualizar_vehiculo_db(id,vehiculo,session)
