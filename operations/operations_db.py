@@ -92,7 +92,7 @@ def combustible_create_form(
     )
 
 async def crear_combustible_precio_db(combustible:CombustibleCreate, session:AsyncSession)->Combustible:
-    nuevo_precio = Combustible(combustible=combustible.ciudad, tipo_combustible=combustible.Tipo_combustible, precio_por_galon=combustible.precio_por_galon)
+    nuevo_precio = Combustible(ciudad=combustible.ciudad, tipo_combustible=combustible.Tipo_combustible, precio_por_galon=combustible.precio_por_galon)
     session.add(nuevo_precio)
     try:
         await session.commit()
