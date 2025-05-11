@@ -35,3 +35,7 @@ async def actualizar_vehiculo(id:int, vehiculo:VehiculoCreate=Depends(vehiculo_c
 @app.delete("/vehiculos/{id}", response_model=Vehiculo, tags=["Vehiculos"])
 async def eliminar_vehiculo(id:int, session:AsyncSession=Depends(get_session))->Vehiculo:
     return await eliminar_vehiculo_db(id,session)
+
+@app.get("/vehiculos/{marca}/{modelo}", response_model=List[Vehiculo], tags=["Vehiculos"])
+async def obtener_vehiculos_por_marca_modelo(marca:str,modelo:str, session:AsyncSession=Depends(get_session))->List[Vehiculo]:
+    return await obtener_vehiculo_por_marca_modelo_db(marca,modelo,session)
