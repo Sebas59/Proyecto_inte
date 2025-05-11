@@ -9,6 +9,7 @@ class Tipo_combustibleEnum(str, Enum):
     diesel = "diesel"
     super_ = "super"
     gas = "gas"
+    gasolina = "gasolina"
 
     
 
