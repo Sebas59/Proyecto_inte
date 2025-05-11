@@ -41,9 +41,9 @@ async def obtener_vehiculos_por_marca_modelo(marca:str,modelo:str, session:Async
     return await obtener_vehiculo_por_marca_modelo_db(marca,modelo,session)
 
 @app.post("/combustible/", response_model=Combustible, tags=["Combustible"])
-async def crear_combustible(combustible:CombustibleCreate=Depends(combustible_create_form), session:AsyncSession=Depends(get_session))->Combustible:
-    return await crear_combustible_precio_db(combustible,session)
+async def crear_combustible(com:CombustibleCreate=Depends(combustible_create_form), session:AsyncSession=Depends(get_session))->Combustible:
+    return await crear_combustible_precio_db(com,session)
 
 @app.get("/combustible/", response_model=List[CombustibleRead], tags=["Combustible"])
 async def obtener_combustible(session:AsyncSession=Depends(get_session))->List[CombustibleRead]:
-    return await obtener_precio_combustible_db(session)
+    return await obtener_precio_combustible_db(session) 
