@@ -79,6 +79,18 @@ async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:Asy
         raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
     return vehiculos
 
+def combustible_create_form(
+    ciudad: str = Form(...),
+    Tipo_combustible: Optional[Tipo_combustibleEnum] = Form(None),
+    precio_por_galon: Optional[float] = Form(0.0)
+    
+) -> CombustibleCreate:
+    return CombustibleCreate(
+        ciudad=ciudad,
+        Tipo_combustible=Tipo_combustible,
+        precio_por_galon=precio_por_galon
+    )
+
 async def crear_combustible_precio_db(combustible:CombustibleCreate, session:AsyncSession)->Combustible:
     nuevo_precio = Combustible(**combustible.dict())
     session.add(nuevo_precio)
