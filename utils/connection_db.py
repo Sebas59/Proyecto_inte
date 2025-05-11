@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from data.models import Vehiculo
 
 
-CLEVER_DB = "postgresql+asyncpg://proyecto_fk5d_user:opMoAQbaeM2C45zZtNga7xLqUxNSY8ZU@dpg-d0f9ngpr0fns7397ll50-a/proyecto_fk5d"
+CLEVER_DB = "postgresql+asyncpg://proyecto_1wa9_user:2kYf0VBmyV0VxNC40ZFmQdzxnaDnHmDm@dpg-d0g050adbo4c73at4gq0-a/proyecto_1wa9"
 
 engine: AsyncEngine = create_async_engine(CLEVER_DB, echo=True)
 async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
