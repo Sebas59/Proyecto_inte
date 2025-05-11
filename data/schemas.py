@@ -24,7 +24,7 @@ class VehiculoRead(SQLModel):
 class CombustibleCreate(SQLModel):
     ciudad: str
     localidad: str
-    Tipo_combustible: Tipo_combustibleEnum
+    tipo_combustible: Tipo_combustibleEnum
     precio_por_galon: float
 
 class CombustibleRead(SQLModel):
