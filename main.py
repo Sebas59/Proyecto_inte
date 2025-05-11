@@ -55,3 +55,6 @@ async def actualizar_combustible_precio(id:int, combustible:CombustibleCreate=De
 @app.delete("/combustible/{id}", response_model = Combustible, tags= ["Combustible"])
 async def eliminar_combustible_precio(id:int, session:AsyncSession=Depends(get_session))->Combustible:
     return await eliminar_precio_combustible_db(id,session)
+@app.get("/combistible/costo-tanqueo/", response_model=List[CostoTanqueo], tags=["Combustible"])
+async def buscar_vehiculos_con_costo_combustible(marca:str,modelo:str,ciudad:str,localidad:str,session:AsyncSession=Depends(get_session))->List[CostoTanqueo]:
+    return await buscar_vehiculos_con_costo_combustible_db(marca,modelo,ciudad,localidad,session)
