@@ -47,3 +47,7 @@ async def crear_combustible(com:CombustibleCreate=Depends(combustible_create_for
 @app.get("/combustible/", response_model=List[CombustibleRead], tags=["Combustible"])
 async def obtener_combustible(session:AsyncSession=Depends(get_session))->List[CombustibleRead]:
     return await obtener_precio_combustible_db(session) 
+
+@app.put("/combustible/{id}", response_model=Combustible, tags=["Combustible"])
+async def actualizar_combustible_precio(id:int, combustible:CombustibleCreate=Depends(combustible_create_form), session:AsyncSession=Depends(get_session))->Combustible:
+    return await actualizar_precio_combustible_db(id,combustible,session)
