@@ -71,7 +71,7 @@ async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
 async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:AsyncSession)->List[Vehiculo]:
     result = await session.execute(
         select(Vehiculo).where(
-            and_(func.lower(Vehiculo.marca) == marca.lower(), func.lower(Vehiculo.modelo) == modelo.lower())
+            and_(Vehiculo.marca.ilike(f"%{marca}%"), Vehiculo.modelo.ilike(f"%{modelo}%"))
         )
     )
     vehiculos = result.scalars().all()
