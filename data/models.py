@@ -4,11 +4,12 @@ from sqlalchemy import Enum as SqlEnum
 from datetime import datetime
 from enum import Enum
 
-class Tipo_combustibleEnum(str,Enum):
-    Corriente = "Corriente"
-    Diesel = "Diesel"
-    Super = "Super"
-    Gas= "Gas"
+class Tipo_combustibleEnum(str, Enum):
+    corriente = "corriente"
+    diesel = "diesel"
+    super_ = "super"
+    gas = "gas"
+
     
 
 class Vehiculo(SQLModel, table=True):
