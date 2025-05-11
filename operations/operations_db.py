@@ -143,18 +143,25 @@ async def obtener_vehiculos_con_costo_combustible_db(marca:str,modelo:str,ciudad
         raise HTTPException(status_code=404, detail="Vehiculos no encontrado")
     resultado : List[CostoTanqueo] = []
     for vehiculo in vehiculos:
-        costo_total = round(vehiculo.Tan_size * 3.78541 * vehiculo.precio_por_galon,2)
-        resultado.append(CostoTanqueo(
-            id=vehiculo.id,
-            marca=vehiculo.marca,
-            modelo=vehiculo.modelo,
-            year=vehiculo.year,
-            Tipo_combustible=vehiculo.Tipo_combustible,
-            Tan_size=vehiculo.Tan_size,
-            ciudad=ciudad,
-            localidad=localidad,
-            costo_total=costo_total
-        ))
+        result_combustible = await session.execute(
+            select(Combustible).where(and_(Combustible.ciudad.ilike(f"%{ciudad}%"), Combustible.localidad.ilike(f"%{localidad}%"),Combustible.tipo_combustible==vehiculo.tipo_combustible))
+        )
+    combustible = result_combustible.scalars_one_or_none()
+    if combustible:
+        costo_total = round(vehiculo.tan_size * combustible.precio_por_galon, 2)
+        resultado.append(
+            CostoTanqueo(
+                marca=vehiculo.marca,
+                modelo=vehiculo.modelo,
+                year=vehiculo.year,
+                Tipo_combustible=vehiculo.tipo_combustible,
+                Tan_size=vehiculo.tan_size,
+                precio_por_galon=combustible.precio_por_galon,
+                ciudad=combustible.ciudad,
+                localidad=combustible.localidad,
+                costo_total=costo_total
+            )
+        )
     if not resultado:
         raise HTTPException(status_code=404, detail="Costo de tanqueo no encontrado")
     return resultado
