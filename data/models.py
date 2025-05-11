@@ -23,6 +23,7 @@ class Combustible(SQLModel, table=True):
     __tablename__ = "Combustible"
     id: Optional[int] = Field(default=None, primary_key=True)
     ciudad: str
+    localidad: str
     tipo_combustible: Optional[Tipo_combustibleEnum] = Field(sa_column=column(SqlEnum(Tipo_combustibleEnum)))
     precio_por_galon: float
 
