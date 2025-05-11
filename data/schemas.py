@@ -36,3 +36,15 @@ class CombustibleRead(SQLModel):
 
     class Config:
         orm_mode = True
+
+class CostoTanqueo(SQLModel):
+    marca: str
+    modelo: str
+    year: int
+    Tipo_combustible: Tipo_combustibleEnum
+    Tan_size: float
+    precio_por_galon: float
+    ciudad: str
+    localidad: str
+    costo_total: float
+    
