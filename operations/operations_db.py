@@ -66,3 +66,15 @@ async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
     except IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al eliminar el vehiculo")
+    
+
+async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:AsyncSession)->List[Vehiculo]:
+    result = await session.execute(
+        select(Vehiculo).where(
+            and_(Vehiculo.marca == marca, Vehiculo.modelo == modelo)
+        )
+    )
+    vehiculos = result.scalars().all()
+    if not vehiculos:
+        raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
+    return vehiculos
