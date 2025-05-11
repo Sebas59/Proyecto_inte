@@ -4,8 +4,8 @@ from sqlalchemy.future import select
 from sqlalchemy import and_
 from fastapi import HTTPException, status
 from typing import List, Optional
-from data.models import Vehiculo, Tipo_combustibleEnum
-from data.schemas import VehiculoCreate, VehiculoRead
+from data.models import *
+from data.schemas import *
 from fastapi import Form
 
 def vehiculo_create_form(
@@ -79,4 +79,13 @@ async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:Asy
         raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
     return vehiculos
 
-async def crear_combustible_precio_db()
+async def crear_combustible_precio_db(combustible:CombustibleCreate, session:AsyncSession)->Combustible:
+    nuevo_precio = Combustible(**combustible.dict())
+    session.add(nuevo_precio)
+    try:
+        await session.commit()
+        await session.refresh(nuevo_precio)
+        return nuevo_precio
+    except IntegrityError:
+        await session.rollback()
+        raise HTTPException(status_code=404, detail="Error al crear el precio del combustible") 
