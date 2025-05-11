@@ -11,16 +11,17 @@ from fastapi import Form
 def vehiculo_create_form(
     marca: str = Form(...),
     modelo: Optional[str] = Form(...),
+    year: Optional[int] = Form(...),
     Tipo_combustible: Optional[Tipo_combustibleEnum] = Form(None),
-    Tan_size: Optional[float] = Form(0.0),
-    year: Optional[int] = Form(...)
+    Tan_size: Optional[float] = Form(0.0)
+    
 ) -> VehiculoCreate:
     return VehiculoCreate(
         marca=marca,
         modelo=modelo,
+        year=year,
         Tipo_combustible=Tipo_combustible,
-        Tan_size=Tan_size,
-        year=year
+        Tan_size=Tan_size
     )
 
 async def crear_vehiculo_db(vehiculo:VehiculoCreate, session:AsyncSession)->Vehiculo:
