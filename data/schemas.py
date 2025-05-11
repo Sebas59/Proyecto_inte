@@ -23,12 +23,14 @@ class VehiculoRead(SQLModel):
 
 class CombustibleCreate(SQLModel):
     ciudad: str
+    localidad: str
     Tipo_combustible: Tipo_combustibleEnum
     precio_por_galon: float
 
 class CombustibleRead(SQLModel):
     id: Optional[int] = None
     ciudad: str
+    localidad: str
     tipo_combustible: Tipo_combustibleEnum
     precio_por_galon: float
 
