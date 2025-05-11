@@ -81,7 +81,7 @@ async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:Asy
 
 def combustible_create_form(
     ciudad: str = Form(...),
-    Tipo_combustible: Optional[Tipo_combustibleEnum] = Form(None),
+    Tipo_combustible: Tipo_combustibleEnum = Form(...),
     precio_por_galon: Optional[float] = Form(0.0)
     
 ) -> CombustibleCreate:
