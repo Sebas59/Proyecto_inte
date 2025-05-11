@@ -40,6 +40,6 @@ async def eliminar_vehiculo(id:int, session:AsyncSession=Depends(get_session))->
 async def obtener_vehiculos_por_marca_modelo(marca:str,modelo:str, session:AsyncSession=Depends(get_session))->List[Vehiculo]:
     return await obtener_vehiculo_por_marca_modelo_db(marca,modelo,session)
 
-@app.pots("/combustible/", response_model=Combustible, tags=["Combustible"])
+@app.post("/combustible/", response_model=Combustible, tags=["Combustible"])
 async def crear_combustible(combustible:CombustibleCreate=Depends(combustible_create_form), session:AsyncSession=Depends(get_session))->Combustible:
     return await crear_combustible_precio_db(combustible,session)
