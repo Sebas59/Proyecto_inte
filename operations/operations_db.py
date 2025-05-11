@@ -148,7 +148,7 @@ async def obtener_vehiculos_con_costo_combustible_db(marca:str,modelo:str,ciudad
         )
     combustible = result_combustible.scalars().one_or_none()
     if combustible:
-        costo_total = round(vehiculo.Tan_size * combustible.precio_por_galon, 2)
+        costo_total = round(vehiculo.Tan_size * combustible.precio_por_galon, 3)
         resultado.append(
             CostoTanqueo(
                 marca=vehiculo.marca,
