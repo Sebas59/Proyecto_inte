@@ -82,19 +82,19 @@ async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:Asy
 def combustible_create_form(
     ciudad: str = Form(...),
     localidad:str= Form(...),
-    Tipo_combustible: Tipo_combustibleEnum = Form(...),
+    tipo_combustible: Tipo_combustibleEnum = Form(...),
     precio_por_galon: float = Form(...)
     
 ) -> CombustibleCreate:
     return CombustibleCreate(
         ciudad=ciudad,
         localidad=localidad,
-        Tipo_combustible=Tipo_combustible,
+        tipo_combustible=tipo_combustible,
         precio_por_galon=precio_por_galon
     )
 
 async def crear_combustible_precio_db(combustible:CombustibleCreate, session:AsyncSession)->Combustible:
-    nuevo_precio = Combustible(ciudad=combustible.ciudad, localidad=combustible.localidad ,tipo_combustible=combustible.Tipo_combustible, precio_por_galon=combustible.precio_por_galon)
+    nuevo_precio = Combustible(ciudad=combustible.ciudad, localidad=combustible.localidad ,tipo_combustible=combustible.tipo_combustible, precio_por_galon=combustible.precio_por_galon)
     session.add(nuevo_precio)
     try:
         await session.commit()
