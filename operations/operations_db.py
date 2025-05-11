@@ -5,7 +5,7 @@ from sqlalchemy import and_
 from fastapi import HTTPException, status
 from typing import List, Optional
 from data.models import Vehiculo, Tipo_combustibleEnum
-from data.schemas import VehiculoCreate
+from data.schemas import VehiculoCreate, VehiculoRead
 from fastapi import Form
 
 def vehiculo_create_form(
@@ -35,7 +35,7 @@ async def crear_vehiculo_db(vehiculo:VehiculoCreate, session:AsyncSession)->Vehi
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al crear el vehiculo")
     
-async def obtener_vehiculos_db(session:AsyncSession)->List[Vehiculo]:
+async def obtener_vehiculos_db(session:AsyncSession)->List[VehiculoRead]:
     result = await session.execute(select(Vehiculo))
     vehiculos = result.scalars().all()
     return vehiculos
@@ -71,10 +71,12 @@ async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
 async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:AsyncSession)->List[Vehiculo]:
     result = await session.execute(
         select(Vehiculo).where(
-            and_(Vehiculo.marca == marca, Vehiculo.modelo == modelo)
+            and_(Vehiculo.marca.lower() == marca.lower(), Vehiculo.modelo.lower() == modelo.lower())
         )
     )
     vehiculos = result.scalars().all()
     if not vehiculos:
         raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
     return vehiculos
+
+async def crear_combustible_precio_db()
