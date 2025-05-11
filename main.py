@@ -24,8 +24,8 @@ app = FastAPI(lifespan=lifespan)
 async def crear_vehiculo(vehiculo:VehiculoCreate=Depends(vehiculo_create_form), session:AsyncSession=Depends(get_session))->Vehiculo:
     return await crear_vehiculo_db(vehiculo,session)
 
-@app.get("/vehiculos/", response_model=List[Vehiculo], tags=["Vehiculos"])
-async def obtener_vehiculos(session:AsyncSession=Depends(get_session))->List[Vehiculo]:
+@app.get("/vehiculos/", response_model=List[VehiculoRead], tags=["Vehiculos"])
+async def obtener_vehiculos(session:AsyncSession=Depends(get_session))->List[VehiculoRead]:
     return await obtener_vehiculos_db(session)
 
 @app.put("/vehiculos/{id}", response_model=Vehiculo, tags=["Vehiculos"])
