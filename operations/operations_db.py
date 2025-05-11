@@ -103,6 +103,6 @@ async def crear_combustible_precio_db(combustible:CombustibleCreate, session:Asy
         raise HTTPException(status_code=404, detail="Error al crear el precio del combustible") 
     
 async def obtener_precio_combustible_db(session:AsyncSession)->List[CombustibleRead]:
-    result = await session.excecute(select(Combustible))
+    result = await session.execute(select(Combustible))
     precio_combustible = result.scalars().all()
     return precio_combustible
