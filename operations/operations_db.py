@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from fastapi import HTTPException, status
 from typing import List, Optional
 from data.models import *
@@ -71,7 +71,7 @@ async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
 async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:AsyncSession)->List[Vehiculo]:
     result = await session.execute(
         select(Vehiculo).where(
-            and_(Vehiculo.marca.lower() == marca.lower(), Vehiculo.modelo.lower() == modelo.lower())
+            and_(func.lower(Vehiculo.marca) == marca.lower(), func.lower(Vehiculo.modelo) == modelo.lower())
         )
     )
     vehiculos = result.scalars().all()
