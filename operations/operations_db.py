@@ -136,4 +136,25 @@ async def eliminar_precio_combustible_db(id:int, session:AsyncSession)->Combusti
         await session.rollback()
         raise HTTPException(status_doce=404, detail=("Eror al eliminar el precio de combustible"))
 
-
+async def obtener_vehiculos_con_costo_combustible_db(marca:str,modelo:str,ciudad:str,localidad:str,session:AsyncSession)->List[CostoTanqueo]:
+    result_vehiculos = await session.execute(select(Vehiculo).where(and_(Vehiculo.marca.ilike(f"%{marca}%"), Vehiculo.modelo.ilike(f"%{modelo}%"))))
+    vehiculos = result_vehiculos.scalars().all()
+    if not vehiculos:
+        raise HTTPException(status_code=404, detail="Vehiculos no encontrado")
+    resultado : List[CostoTanqueo] = []
+    for vehiculo in vehiculos:
+        costo_total = round(vehiculo.Tan_size * 3.78541 * vehiculo.precio_por_galon,2)
+        resultado.append(CostoTanqueo(
+            id=vehiculo.id,
+            marca=vehiculo.marca,
+            modelo=vehiculo.modelo,
+            year=vehiculo.year,
+            Tipo_combustible=vehiculo.Tipo_combustible,
+            Tan_size=vehiculo.Tan_size,
+            ciudad=ciudad,
+            localidad=localidad,
+            costo_total=costo_total
+        ))
+    if not resultado:
+        raise HTTPException(status_code=404, detail="Costo de tanqueo no encontrado")
+    return resultado
