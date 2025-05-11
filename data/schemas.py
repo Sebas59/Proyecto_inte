@@ -20,3 +20,8 @@ class VehiculoRead(SQLModel):
 
     class Config:
         orm_mode = True
+
+class CombustibleCreate(SQLModel):
+    ciudad: str
+    tipo_combustible: Tipo_combustibleEnum
+    precio_por_galon: float
