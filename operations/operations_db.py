@@ -38,3 +38,18 @@ async def obtener_vehiculos_db(session:AsyncSession)->List[Vehiculo]:
     result = await session.execute(select(Vehiculo))
     vehiculos = result.scalars().all()
     return vehiculos
+
+async def actualizar_vehiculo_db(id:int, vehiculo:VehiculoCreate, session:AsyncSession)->Vehiculo:
+    vehiculo_actualizado = await session.get(Vehiculo, id)
+    if not vehiculo_actualizado:
+        raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
+    for key, value in vehiculo.dict(exclude_unset=True).items():
+        setattr(vehiculo_actualizado, key, value)
+    session.add(vehiculo_actualizado)
+    try:
+        await session.commit()
+        await session.refresh(vehiculo_actualizado)
+        return vehiculo_actualizado
+    except IntegrityError:
+        await session.rollback()
+        raise HTTPException(status_code=404, detail="Error al actualizar el vehiculo")
