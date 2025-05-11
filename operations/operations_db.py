@@ -123,3 +123,17 @@ async def actualizar_precio_combustible_db(id:int, combustible:CombustibleCreate
     except IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al actualizar el precio del combustible")
+    
+async def eliminar_precio_combustible_db(id:int, session:AsyncSession)->Combustible:
+    precio_eliminado = await session.get(Combustible,id)
+    if not precio_eliminado:
+        raise HTTPException(status_code=404, detail=("Precio de combustible no encontrado"))
+    await session.delete(precio_eliminado)
+    try:
+        await session.commit()
+        return precio_eliminado
+    except IntegrityError:
+        await session.rollback()
+        raise HTTPException(status_doce=404, detail=("Eror al eliminar el precio de combustible"))
+
+
