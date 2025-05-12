@@ -59,6 +59,15 @@ async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
     vehiculo_a_eliminar = await session.get(Vehiculo, id)
     if not vehiculo_a_eliminar:
         raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
+    historico = VehiculoHistorico(
+        original_id=vehiculo_a_eliminar.id,
+        marca=vehiculo_a_eliminar.marca,
+        modelo=vehiculo_a_eliminar.modelo,
+        year=vehiculo_a_eliminar.year,
+        Tipo_combustible=vehiculo_a_eliminar.Tipo_combustible,
+        Tan_size=vehiculo_a_eliminar.Tan_size
+    )
+    session.add(historico)
     await session.delete(vehiculo_a_eliminar)
     try:
         await session.commit()
