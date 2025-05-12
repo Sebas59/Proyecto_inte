@@ -21,6 +21,18 @@ class VehiculoRead(SQLModel):
     class Config:
         orm_mode = True
 
+class VehiculoHistoricoRead(SQLModel):
+    id: Optional[int] = None
+    original_id: int
+    marca: str
+    modelo: str
+    year: int
+    Tipo_combustible: Tipo_combustibleEnum
+    Tan_size: float
+
+    class Config:
+        orm_mode = True
+
 class CombustibleCreate(SQLModel):
     ciudad: str
     localidad: str
