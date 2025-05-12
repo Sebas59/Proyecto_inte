@@ -128,6 +128,15 @@ async def eliminar_precio_combustible_db(id:int, session:AsyncSession)->Combusti
     precio_eliminado = await session.get(Combustible,id)
     if not precio_eliminado:
         raise HTTPException(status_code=404, detail=("Precio de combustible no encontrado"))
+    
+    historico = CombustibleHistorico(
+        original_id=precio_eliminado.id,
+        ciudad=precio_eliminado.ciudad,
+        localidad=precio_eliminado.localidad,
+        tipo_combustible=precio_eliminado.tipo_combustible,
+        precio_por_galon=precio_eliminado.precio_por_galon
+    )
+    session.add(historico)
     await session.delete(precio_eliminado)
     try:
         await session.commit()
