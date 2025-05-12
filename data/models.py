@@ -35,3 +35,13 @@ class CombustibleHistorico(SQLModel, table=True):
     localidad: str
     tipo_combustible: Optional[Tipo_combustibleEnum] = Field(sa_column=column(SqlEnum(Tipo_combustibleEnum)))
     precio_por_galon: float
+
+class VehiculoHistorico(SQLModel, table=True):
+    __tablename__ = "VehiculoHistorico"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    original_id: int
+    marca: str
+    modelo: str
+    year: int
+    Tipo_combustible: Optional[Tipo_combustibleEnum] = Field(sa_column=column(SqlEnum(Tipo_combustibleEnum)))
+    Tan_size: float
