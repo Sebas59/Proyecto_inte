@@ -37,6 +37,17 @@ class CombustibleRead(SQLModel):
     class Config:
         orm_mode = True
 
+class CombustibleHistoricoRead(SQLModel):
+    id: Optional[int] = None
+    original_id: int
+    ciudad: str
+    localidad: str
+    tipo_combustible: Tipo_combustibleEnum
+    precio_por_galon: float
+
+    class Config:
+        orm_mode = True
+
 class CostoTanqueo(SQLModel):
     marca: str
     modelo: str
