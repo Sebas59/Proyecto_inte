@@ -55,11 +55,19 @@ async def actualizar_combustible_precio(id:int, combustible:CombustibleCreate=De
 @app.delete("/combustible/{id}", response_model = Combustible, tags= ["Combustible"])
 async def eliminar_combustible_precio(id:int, session:AsyncSession=Depends(get_session))->Combustible:
     return await eliminar_precio_combustible_db(id,session)
+
 @app.get("/combistible/costo-tanqueo/", response_model=List[CostoTanqueo], tags=["Combustible"])
 async def obtener_vehiculos_con_costo_combustible(marca:str,modelo:str,ciudad:str,localidad:str,session:AsyncSession=Depends(get_session))->List[CostoTanqueo]:
     return await obtener_vehiculos_con_costo_combustible_db(marca,modelo,ciudad,localidad,session)
-@app.get("/combustible/historico/", response_model=List[CombustibleHistoricoRead], tags=["Combustible"])
+
+@app.get("/combustible/historico/", response_model=List[CombustibleHistoricoRead], tags=["Historico Combustible"])
 async def obtener_combustible_historico(session:AsyncSession=Depends(get_session))->List[CombustibleHistoricoRead]:
     result = await session.execute(select(CombustibleHistorico))
     combustible_historico = result.scalars().all()
     return combustible_historico
+
+@app.get("/combustible/historico/", response_model=List[VehiculoHistoricoRead], tags=["Historico Vehiculo"])
+async def obtener_combustible_historico(session:AsyncSession=Depends(get_session))->List[VehiculoHistoricoRead]:
+    result = await session.execute(select(VehiculoHistorico))
+    vehiculo_historico = result.scalars().all()
+    return vehiculo_historico
