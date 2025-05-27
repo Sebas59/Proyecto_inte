@@ -7,7 +7,7 @@ import home
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/statics", StaticFiles(directory="statics"), name="statics")
 
 app.include_router(home.router)
 
