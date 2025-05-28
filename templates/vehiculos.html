@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Vehículos - Mi App de Vehículos y Combustibles{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Listado de Vehículos</h1>
+        <a href="/vehiculos/create" class="btn btn-success mb-3">Registrar Nuevo Vehículo</a> {# O /vehiculos/create si cambiaste la ruta #}
+
+        {% if vehiculos %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover shadow-sm rounded">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Año</th>
+                            <th>Tipo de Combustible</th>
+                            <th>Tamaño del Tanque (galones)</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for vehiculo in vehiculos %}
+                        <tr>
+                            <td>{{ vehiculo.marca }}</td>
+                            <td>{{ vehiculo.modelo }}</td>
+                            <td>{{ vehiculo.year }}</td>
+                            <td>{{ vehiculo.Tipo_combustible.value }}</td>
+                            <td>{{ vehiculo.Tan_size }}</td>
+                            <td>
+                                <a href="/vehiculos/edit/{{ vehiculo.id }}" class="btn btn-sm btn-info me-2">Editar</a>
+                                <form action="/vehiculos/delete/{{ vehiculo.id }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No hay vehículos registrados. ¡Sé el primero en agregar uno!
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
