@@ -195,7 +195,7 @@ async def create_vehiculo(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
-@router.post("/combustilbe/eliminar/{combustible_id}", tags=["Combustibles"])
+@router.post("/combustible/eliminar/{combustible_id}", tags=["Combustibles"])
 async def eliminar_combustible(
     combustible_id : int,
     session : AsyncSession = Depends(get_session)
