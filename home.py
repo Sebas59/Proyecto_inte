@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse, RedirectResponse
-
+from sqlalchemy.future import select
 
 from data.models import *
 from utils.connection_db import *
@@ -105,3 +105,41 @@ async def eliminar_vehiculo(
             url="/vehiculos",
             status_code=status.HTTP_303_SEE_OTHER
         )
+    
+@router.get("/vehiculos/edit/{vehiculo_id}", tags=["Vehículos"])
+async def editar_vehiculo_html(
+    request : Request,
+    vehiculo_id: int,
+    session: AsyncSession = Depends(get_session)
+):
+    result = await session.execute(
+        select(Vehiculo).where(Vehiculo.id == vehiculo_id)
+        )
+    vehiculo = result.scalar_one_or_none()
+    if vehiculo is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Vehículo no encontrado"
+        )
+    return templades.TemplateResponse(
+        "vehiculo_edit.html", {
+            "request":request,
+            "title": "Editar Vehículo:{vehiculo.marca} {vehiculo.modelo}",
+            "vehiculo": vehiculo,
+            "Tipo_combustibleEnum": Tipo_combustibleEnum
+            
+        }
+        )
+
+@router.post("/vehiculos/edit/{vehiculo_id}", tags=["Vehículos"])
+async def actualizar_vehiculo(
+    vehiculo_id : int,
+    vehiculo_data: VehiculoCreate = Depends(vehiculo_create_form),
+    session: AsyncSession = Depends(get_session)
+):
+    vehiculo = await actualizar_vehiculo_db(vehiculo_id, vehiculo_data, session)
+    return RedirectResponse(
+        url="/vehiculos",
+        status_code=status.HTTP_303_SEE_OTHER
+    )
+    
