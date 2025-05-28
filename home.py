@@ -154,4 +154,43 @@ async def combustible_list_html(request: Request, session: AsyncSession = Depend
         "precios_combustible": precios_combustible,
         "title": "Lista de Combustibles"
     })
-    
+
+@router.get("/combustible/crear", tags=["Combustibles"])
+async def combustible_create_html(request:Request, session:AsyncSession = Depends(get_session)):
+    return templades.TemplateResponse("combustible_create.html", {
+        "request": request,
+        "title": "Crear Combustible",
+        "tipo_combustibleEnum":Tipo_combustibleEnum
+    })
+
+@router.post("/combustible/crear", tags=["Combustibles"]) 
+async def create_vehiculo(
+    combustible_data: CombustibleCreate = Depends(combustible_create_form), 
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        nuevo_combustible = await crear_combustible_precio_db(combustible_data,session)
+        return RedirectResponse(url="/combustibles", status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException as e:
+         return templades.TemplateResponse(
+            "combustible_create.html", 
+            {
+                "request": Request(scope={"type": "http"}), 
+                "title": "Crear Combustible",
+                "tipo_combustibleEnum": Tipo_combustibleEnum,
+                "error_message": e.detail, 
+            },
+            status_code=e.status_code 
+        )
+    except Exception as e:
+        print(f"Error inesperado al crear combustible: {e}") 
+        return templades.TemplateResponse(
+            "combustible_create.html",
+            {
+                "request": Request(scope={"type": "http"}), 
+                "title": "Crear combustible",
+                "tipo_combustibleEnum": Tipo_combustibleEnum,
+                "error_message": f"Ocurrió un error inesperado al registrar el vehículo."
+            },
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
