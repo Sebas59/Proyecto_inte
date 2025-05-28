@@ -57,33 +57,32 @@ async def vehiculo_create_html(request:Request, session:AsyncSession = Depends(g
 
 @router.post("/vehiculos/crear", tags=["Vehículos"]) 
 async def create_vehiculo(
-    request: Request,
     vehiculo_data: VehiculoCreate = Depends(vehiculo_create_form), 
     session: AsyncSession = Depends(get_session)
 ):
-    """Procesa el formulario y crea un nuevo vehículo."""
     try:
-        nuevo_vehiculo = await crear_vehiculo_db(vehiculo_data, session)
+        nuevo_vehiculo = await crear_vehiculo_db(vehiculo_data,session)
         return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
-        return templades.TemplateResponse(
-            "vehiculo_create.html",
+         return templades.TemplateResponse(
+            "create_vehicle.html", 
             {
-                "request": request,
+                "request": Request(scope={"type": "http"}), 
                 "title": "Crear Vehículo",
                 "Tipo_combustibleEnum": Tipo_combustibleEnum,
-                "error_message": e.detail 
+                "error_message": e.detail, 
             },
-            status_code=e.status_code
+            status_code=e.status_code 
         )
     except Exception as e:
+        print(f"Error inesperado al crear vehículo: {e}") 
         return templades.TemplateResponse(
-            "vehiculo_create.html",
+            "create_vehicle.html",
             {
-                "request": request,
+                "request": Request(scope={"type": "http"}), 
                 "title": "Crear Vehículo",
                 "Tipo_combustibleEnum": Tipo_combustibleEnum,
-                "error_message": f"Ocurrió un error inesperado: {e}"
+                "error_message": f"Ocurrió un error inesperado al registrar el vehículo."
             },
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
