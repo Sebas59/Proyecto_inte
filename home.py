@@ -209,3 +209,42 @@ async def eliminar_combustible(
             url="/combustibles",
             status_code=status.HTTP_303_SEE_OTHER
         )
+    
+@router.get("/combustibles/edit/{combustible_id}", tags=["Combustibles"])
+async def editar_combustible_html(
+    request : Request,
+    combustible_id: int,
+    session: AsyncSession = Depends(get_session)
+):
+    result = await session.execute(
+        select(Combustible).where(Combustible.id == combustible_id),
+    )
+        
+    combustible = result.scalar_one_or_none()
+    if combustible is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Combustible no encontrado"
+        )
+    return templades.TemplateResponse(
+        "combustible_edit.html", {
+            "request":request,
+            "title": "Editar Combustible:{combustible.ciudad} {combustible.localidad}",
+            "combustible": combustible,
+            "tipo_combustibleEnum": Tipo_combustibleEnum
+            
+        }
+        )
+
+@router.post("/combustibles/edit/{combustible_id}", tags=["Combustibles"])
+async def actualizar_combustible(
+    combustible_id : int,
+    combustible_data: CombustibleCreate = Depends(combustible_create_form),
+    session: AsyncSession = Depends(get_session)
+):
+    combustible = await actualizar_precio_combustible_db(combustible_id, combustible_data, session)
+    return RedirectResponse(
+        url="/combustibles",
+        status_code=status.HTTP_303_SEE_OTHER
+    )
+
