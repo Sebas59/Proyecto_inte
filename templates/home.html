@@ -10,22 +10,24 @@
         <hr class="my-4">
         <p>Nuestra aplicación te permite mantener un registro detallado de tus automóviles, así como acceder a los precios más recientes de los diferentes tipos de combustible en tu zona.</p>
         
-        
         <div class="mt-4">
              <a class="btn btn-success btn-lg" href="/vehiculos/crear" role="button">¡Registra un Nuevo Vehículo Ahora!</a>
         </div>
-       
     </div>
 
-   
-    <h2 class="text-center mt-5 mb-4 text-primary">Conoce Más Sobre Nuestro Mundo</h2>
+    {# Contenedor para las tarjetas interactivas con información detallada #}
+    <h2 class="text-center mt-5 mb-4 text-primary">Nuestras Funcionalidades Clave</h2>
     <div class="cards-container"> {# Esta es la clase CSS que hace el display: flex #}
         <a href="/vehiculos" class="info-card">
             <img src="{{ url_for('statics', path='img/vehiculo.png') }}" alt="Vehículos de Combustión">
             <div class="info-card-overlay">
                 <h3><i class="bi bi-car me-2"></i>Vehículos de Combustión</h3>
-                <p>Los vehículos de combustión interna han sido la columna vertebral del transporte global. En esta plataforma, podrás registrar sus especificaciones para un control preciso de tus activos automotrices.</p>
-                
+                <p>
+                    Los vehículos de combustión interna, impulsados por gasolina, diésel o gas, han sido la columna vertebral del transporte global durante más de un siglo. Su funcionamiento se basa en la quema controlada de combustible dentro de un motor para generar la energía necesaria para el movimiento. Aunque la tecnología avanza hacia alternativas más ecológicas, los motores de combustión siguen siendo dominantes y fundamentales para la infraestructura actual.
+                </p>
+                <p>
+                    En esta plataforma, podrás registrar las especificaciones de tus vehículos de combustión, como la marca, modelo, año y el tamaño de su tanque de combustible, lo que te ayudará a llevar un control más preciso de tus activos automotrices.
+                </p>
             </div>
         </a>
 
@@ -33,7 +35,12 @@
             <img src="{{ url_for('statics', path='img/combustible.png') }}" alt="Tipos de Combustible">
             <div class="info-card-overlay">
                 <h3><i class="bi bi-fuel-pump me-2"></i>Tipos de Combustible</h3>
-                <p>Gasolina y diésel son esenciales. Nuestra sección te proporcionará información actualizada sobre los costos por galón en diferentes ciudades y localidades, ayudándote a optimizar tus gastos.</p>
+                <p>
+                    Los combustibles fósiles como la gasolina y el diésel son esenciales para el funcionamiento de la mayoría de los vehículos de combustión. La gasolina se utiliza principalmente en motores de encendido por chispa, mientras que el diésel alimenta los motores de compresión. La eficiencia del combustible y su octanaje son factores clave que influyen en el rendimiento y la economía de los vehículos.
+                </p>
+                <p>
+                    Nuestra sección de precios de combustible te proporcionará información actualizada sobre los costos por galón en diferentes ciudades y localidades, ayudándote a tomar decisiones informadas sobre dónde y cuándo repostar. Esto es crucial para optimizar tus gastos de transporte.
+                </p>
             </div>
         </a>
 
@@ -41,12 +48,14 @@
             <img src="{{ url_for('statics', path='img/busqueda.png') }}" alt="Búsqueda de Costo de Tanqueo">
             <div class="info-card-overlay">
                 <h3><i class="bi bi-calculator me-2"></i>Costo de Tanqueo</h3>
-                <p>Estima fácilmente cuánto te costará llenar el tanque de tus vehículos. Solo ingresa la marca, modelo y tipo de combustible para obtener un cálculo preciso.</p>
+                <p>
+                    Estima el costo total de llenar el tanque de tu vehículo. Nuestra herramienta te permite calcularlo basándose en la marca, modelo, tamaño del tanque de tu vehículo y los precios de combustible actualizados en diferentes ciudades y localidades.
+                </p>
+                <p>
+                    Obtén información precisa y toma decisiones inteligentes para optimizar tus gastos de combustible y la gestión de tu flota de vehículos de manera eficiente.
+                </p>
             </div>
         </a>
     </div>
-
-    
-
 </div>
 {% endblock %}
