@@ -51,9 +51,9 @@ async def actualizar_vehiculo_db(id:int, vehiculo:VehiculoCreate, session:AsyncS
         await session.commit()
         await session.refresh(vehiculo_actualizado)
         return vehiculo_actualizado
-    except IntegrityError:
+    except IntegrityError as e:
         await session.rollback()
-        raise HTTPException(status_code=404, detail="Error al actualizar el vehiculo")
+        raise HTTPException(status_code=404, detail="Error al actualizar el vehiculo:")
     
 async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
     vehiculo_a_eliminar = await session.get(Vehiculo, id)
@@ -154,32 +154,79 @@ async def eliminar_precio_combustible_db(id:int, session:AsyncSession)->Combusti
         await session.rollback()
         raise HTTPException(status_doce=404, detail=("Eror al eliminar el precio de combustible"))
 
-async def obtener_vehiculos_con_costo_combustible_db(marca:str,modelo:str,ciudad:str,localidad:str,session:AsyncSession)->List[CostoTanqueo]:
-    result_vehiculos = await session.execute(select(Vehiculo).where(and_(Vehiculo.marca.ilike(f"%{marca}%"), Vehiculo.modelo.ilike(f"%{modelo}%"))))
+async def obtener_vehiculos_con_costo_combustible_db(
+    session: AsyncSession,
+    marca: Optional[str] = None,
+    modelo: Optional[str] = None,
+    ciudad: Optional[str] = None,
+    localidad: Optional[str] = None,
+    tipo_combustible: Optional[Tipo_combustibleEnum] = None 
+) -> List[CostoTanqueo]:
+    
+   
+    query_vehiculos = select(Vehiculo)
+    conditions_vehiculos = []
+    if marca:
+        conditions_vehiculos.append(Vehiculo.marca.ilike(f"%{marca}%"))
+    if modelo:
+        conditions_vehiculos.append(Vehiculo.modelo.ilike(f"%{modelo}%"))
+    if conditions_vehiculos:
+        query_vehiculos = query_vehiculos.where(and_(*conditions_vehiculos))
+
+    result_vehiculos = await session.execute(query_vehiculos)
     vehiculos = result_vehiculos.scalars().all()
+
     if not vehiculos:
-        raise HTTPException(status_code=404, detail="Vehiculos no encontrado")
-    resultado : List[CostoTanqueo] = []
+        return [] 
+
+    resultado: List[CostoTanqueo] = []
     for vehiculo in vehiculos:
-        result_combustible = await session.execute(
-            select(Combustible).where(and_(Combustible.ciudad.ilike(f"%{ciudad}%"), Combustible.localidad.ilike(f"%{localidad}%"),Combustible.tipo_combustible==vehiculo.Tipo_combustible))
-        )
-    combustible = result_combustible.scalars().one_or_none()
-    if combustible:
-        costo_total = round(vehiculo.Tan_size * combustible.precio_por_galon, 3)
-        resultado.append(
-            CostoTanqueo(
-                marca=vehiculo.marca,
-                modelo=vehiculo.modelo,
-                year=vehiculo.year,
-                Tipo_combustible=vehiculo.Tipo_combustible,
-                Tan_size=vehiculo.Tan_size,
-                precio_por_galon=combustible.precio_por_galon,
-                ciudad=combustible.ciudad,
-                localidad=combustible.localidad,
-                costo_total=costo_total
+        query_combustible = select(Combustible)
+        conditions_combustible = []
+        if ciudad:
+            conditions_combustible.append(Combustible.ciudad.ilike(f"%{ciudad}%"))
+        if localidad:
+            conditions_combustible.append(Combustible.localidad.ilike(f"%{localidad}%"))
+ 
+        conditions_combustible.append(Combustible.tipo_combustible == vehiculo.Tipo_combustible)
+        
+
+        if tipo_combustible:
+            conditions_combustible.append(Combustible.tipo_combustible == tipo_combustible)
+
+        if conditions_combustible:
+            query_combustible = query_combustible.where(and_(*conditions_combustible))
+
+        result_combustible = await session.execute(query_combustible)
+        combustible = result_combustible.scalars().one_or_none() 
+
+        if combustible:
+
+            if vehiculo.Tan_size is not None and combustible.precio_por_galon is not None:
+                costo_total = round(vehiculo.Tan_size * combustible.precio_por_galon, 3)
+            else:
+                costo_total = None 
+            
+            resultado.append(
+                CostoTanqueo(
+                    marca=vehiculo.marca,
+                    modelo=vehiculo.modelo,
+                    year=vehiculo.year,
+                    Tipo_combustible=vehiculo.Tipo_combustible,
+                    Tan_size=vehiculo.Tan_size,
+                    precio_por_galon=combustible.precio_por_galon,
+                    ciudad=combustible.ciudad,
+                    localidad=combustible.localidad,
+                    costo_tanqueo=costo_total
+                )
             )
-        )
+    
+  
     if not resultado:
-        raise HTTPException(status_code=404, detail="Costo de tanqueo no encontrado")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No se encontraron vehículos o precios de combustible que coincidan con los criterios proporcionados."
+        )
+        pass 
+    
     return resultado
