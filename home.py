@@ -39,7 +39,7 @@ router = APIRouter(lifespan=lifespan)
 async def leer_home(request: Request):
     return templades.TemplateResponse("home.html", {"request": request})
 
-@router.get("/vehiculos", response_model=HTMLResponse, tags=["Vehículos"])
+@router.get("/vehiculos", tags=["Vehículos"])
 async def vehiculos_list_html(request: Request, session : AsyncSession = Depends(get_session)):
     vehiculos = await obtener_vehiculos_db(session)
     return templades.TemplateResponse("vehiculos.html", {
