@@ -30,7 +30,7 @@
                             <td>{{ vehiculo.Tan_size }}</td>
                             <td>
                                 <a href="/vehiculos/edit/{{ vehiculo.id }}" class="btn btn-sm btn-info me-2">Editar</a>
-                                <form action="/vehiculos/eliminar/{{vehiculo_id}}" method="post" style="display:inline;">
+                                <form action="/vehiculos/eliminar/{{vehiculo.id}}" method="post" style="display:inline;">
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">Eliminar</button>
                                 </form>
                             </td>
