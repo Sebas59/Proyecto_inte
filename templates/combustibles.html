@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Combustible{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Listado de Combustible</h1>
+        <a href="/combustible/crear" class="btn btn-success mb-3">Registrar Nuevo Combustible</a> 
+
+        {% if precios_combustible %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover shadow-sm rounded">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th>Ciudad</th>
+                            <th>Localidad</th>
+                            <th>Tipo de Combustible</th>
+                            <th>Precio por galones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for combustible in precios_combustible %}
+                        <tr>
+                            <td>{{ combustible.ciudad }}</td>
+                            <td>{{ combustible.localidad }}</td>
+                            <td>{{ combustible.tipo_combustible.value }}</td>
+                            <td>{{ combustible.precio_por_galon }}</td>
+                            <td>
+                                <a href="/combustibles/edit/{{ combustible.id }}" class="btn btn-sm btn-info me-2">Editar</a>
+                                <form action="/combustible/eliminar/{{combustible.id}}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este Combustible?');">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                No hay Combustible registrados. ¡Sé el primero en agregar uno!
+            </div>
+        {% endif %}
+    </div>
+    <a href="/" class="btn btn-secondary mt-3">Volver a Inicio</a>
+{% endblock %}
