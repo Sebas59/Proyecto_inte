@@ -41,8 +41,8 @@
                         <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
                         <select class="form-select" id="tipo_combustible" name="tipo_combustible">
                             <option value="">Cualquiera</option>
-                            {% if Tipo_combustibleEnum %}
-                                {% for fuel_type in Tipo_combustibleEnum %}
+                            {% if tipo_combustibleEnum %}
+                                {% for fuel_type in tipo_combustibleEnum %}
                                     <option value="{{ fuel_type.value }}" 
                                             {% if tipo_combustible_buscado == fuel_type.value %}selected{% endif %}>
                                         {{ fuel_type.value }}
@@ -76,7 +76,7 @@
                         <th>Ciudad Combustible</th>
                         <th>Localidad Combustible</th>
                         <th>Precio/Galón</th>
-                        <th>Costo Tanqueo</th>
+                        <th>Costo total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -90,7 +90,7 @@
                         <td>{{ item.ciudad }}</td>
                         <td>{{ item.localidad }}</td>
                         <td>{{ item.precio_por_galon }}</td>
-                        <td>{{ item.costo_tanqueo }}</td>
+                        <td>{{ item.costo_total }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
