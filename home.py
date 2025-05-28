@@ -91,9 +91,17 @@ async def create_vehiculo(
 async def vehiculos_registro_exitosa(request: Request):
     return templades.TemplateResponse("vehiculo_registration_success.html", {"request": request, "title": "Registro Exitoso"})
 
-@router.delete("/vehiculos/eliminar/{vehiculo_id}", tags=["Vehículos"])
+@router.post("/vehiculos/eliminar/{vehiculo_id}", tags=["Vehículos"])
 async def eliminar_vehiculo(
     vehiculo_id : int,
     session : AsyncSession = Depends(get_session)
 ):
-    return await eliminar_vehiculo_db(vehiculo_id, session)
+    try:
+        await eliminar_vehiculo_db(vehiculo_id, session)
+        return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException as e:
+        print(f"Error al eliminar vehículo: {e.detail}")
+        return RedirectResponse(
+            url="/vehiculos",
+            status_code=status.HTTP_303_SEE_OTHER
+        )
