@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Combustible: {{ combustible.ciudad }} {{ combustible.localidad }} - Mi App{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-primary">Editar Combustible</h1>
+
+    {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Error:</strong> {{ error_message }}
+        </div>
+    {% endif %}
+
+    <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+        <div class="card-body">
+            <form action="/combustibles/edit/{{ combustible.id }}" method="post">
+                <div class="mb-3">
+                    <label for="ciudad" class="form-label">Ciudad:</label>
+                    <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{ combustible.ciudad }}" placeholder="Ej: Bogota" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="localidad" class="form-label">Localidad:</label>
+                    <input type="text" class="form-control" id="localidad" name="localidad" value="{{ combustible.localidad }}" placeholder="Ej: Engativa" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
+                    <select class="form-select" id="tipo_combustible" name="tipo_combustible" required>
+                        <option value="">Selecciona un tipo de combustible</option>
+                        {% if tipo_combustibleEnum %}
+                            {% for fuel_type in tipo_combustibleEnum %}
+                                <option value="{{ fuel_type.value }}" {% if combustible.tipo_combustible.value == fuel_type.value %}selected{% endif %}>
+                                    {{ fuel_type.value }}
+                                </option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="precio_por_galones" class="form-label">Precio por galones:</label>
+                    <input type="number" step="0.001" class="form-control" id="precio_por_galones" name="precio_por_galones" value="{{ combustible.precio_por_galones }}" min="0" placeholder="Ej: 15.500">
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-3">Actualizar Combustible</button>
+                <a href="/combustibles" class="btn btn-secondary mt-3 ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
