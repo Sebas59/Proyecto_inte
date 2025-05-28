@@ -142,4 +142,16 @@ async def actualizar_vehiculo(
         url="/vehiculos",
         status_code=status.HTTP_303_SEE_OTHER
     )
+
+
+
+@router.get("/combustibles", tags=["Combustibles"])
+async def combustible_list_html(request: Request, session: AsyncSession = Depends(get_session)):
+    precios_combustible = await obtener_precio_combustible_db(session)
+    return templades.TemplateResponse("combustibles.html",
+     {
+        "request": request,
+        "precios_combustible": precios_combustible,
+        "title": "Lista de Combustibles"
+    })
     
