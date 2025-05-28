@@ -44,7 +44,7 @@ async def vehiculos_list_html(request: Request, session : AsyncSession = Depends
     vehiculos = await obtener_vehiculos_db(session)
     return templades.TemplateResponse("vehiculos.html", {
         "request": request,
-        "sesions": vehiculos, 
+        "vehiculos": vehiculos, 
         "title": "Lista de Vehículos"})
 
 @router.get("/vehiculos/crear", tags=["Vehículos"])
@@ -89,5 +89,4 @@ async def create_vehiculo(
 
 @router.get("/vehiculos_registro", tags=["Vehículos"])
 async def vehiculos_registro_exitosa(request: Request):
-    """Página de confirmación de registro de vehículo exitoso."""
     return templades.TemplateResponse("vehiculo_registration_success.html", {"request": request, "title": "Registro Exitoso"})
