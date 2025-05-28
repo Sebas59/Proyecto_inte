@@ -65,7 +65,7 @@ async def create_vehiculo(
         return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
          return templades.TemplateResponse(
-            "create_vehicle.html", 
+            "vehiculo_create.html", 
             {
                 "request": Request(scope={"type": "http"}), 
                 "title": "Crear Vehículo",
@@ -77,7 +77,7 @@ async def create_vehiculo(
     except Exception as e:
         print(f"Error inesperado al crear vehículo: {e}") 
         return templades.TemplateResponse(
-            "create_vehicle.html",
+            "vehiculo_create.html",
             {
                 "request": Request(scope={"type": "http"}), 
                 "title": "Crear Vehículo",
@@ -90,4 +90,4 @@ async def create_vehiculo(
 @router.get("/vehiculos_registro", tags=["Vehículos"])
 async def vehiculos_registro_exitosa(request: Request):
     """Página de confirmación de registro de vehículo exitoso."""
-    return templades.TemplateResponse("vehicle_registration_success.html", {"request": request, "title": "Registro Exitoso"})
+    return templades.TemplateResponse("vehiculo_registration_success.html", {"request": request, "title": "Registro Exitoso"})
