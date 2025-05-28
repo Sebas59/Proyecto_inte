@@ -86,3 +86,8 @@ async def create_vehiculo(
             },
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@router.get("/vehiculos_registro", tags=["Vehículos"])
+async def vehiculos_registro_exitosa(request: Request):
+    """Página de confirmación de registro de vehículo exitoso."""
+    return templades.TemplateResponse("vehicle_registration_success.html", {"request": request, "title": "Registro Exitoso"})
