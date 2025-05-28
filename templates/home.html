@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Mi App de Vehículos y Combustibles{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron text-center bg-light p-5 rounded shadow-sm">
+        <h1 class="display-4 text-primary mb-4">Bienvenido a la Plataforma de Vehículos y Combustibles</h1>
+        <p class="lead">Explora, gestiona y visualiza información clave sobre tus vehículos de combustión y los precios de combustible.</p>
+        <hr class="my-4">
+        <p>Nuestra aplicación te permite mantener un registro detallado de tus automóviles, así como acceder a los precios más recientes de los diferentes tipos de combustible en tu zona.</p>
+        <a class="btn btn-primary btn-lg mt-3" href="/vehicles" role="button">Ver Vehículos Registrados</a>
+        <a class="btn btn-secondary btn-lg mt-3 ms-3" href="/fuel_prices" role="button">Consultar Precios de Combustible</a>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="card-title text-primary"><i class="bi bi-car me-2"></i>Vehículos de Combustión: El Motor del Progreso</h2>
+                    <p class="card-text">
+                        Los vehículos de combustión interna, impulsados por gasolina, diésel o gas, han sido la columna vertebral del transporte global durante más de un siglo. Su funcionamiento se basa en la quema controlada de combustible dentro de un motor para generar la energía necesaria para el movimiento. Aunque la tecnología avanza hacia alternativas más ecológicas, los motores de combustión siguen siendo dominantes y fundamentales para la infraestructura actual.
+                    </p>
+                    <p class="card-text">
+                        En esta plataforma, podrás registrar las especificaciones de tus vehículos de combustión, como la marca, modelo, año y el tamaño de su tanque de combustible, lo que te ayudará a llevar un control más preciso de tus activos automotrices.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="card-title text-primary"><i class="bi bi-fuel-pump me-2"></i>Tipos de Combustible y su Impacto</h2>
+                    <p class="card-text">
+                        Los combustibles fósiles como la gasolina y el diésel son esenciales para el funcionamiento de la mayoría de los vehículos de combustión. La gasolina se utiliza principalmente en motores de encendido por chispa, mientras que el diésel alimenta los motores de compresión. La eficiencia del combustible y su octanaje son factores clave que influyen en el rendimiento y la economía de los vehículos.
+                    </p>
+                    <p class="card-text">
+                        Nuestra sección de precios de combustible te proporcionará información actualizada sobre los costos por galón en diferentes ciudades y localidades, ayudándote a tomar decisiones informadas sobre dónde y cuándo repostar. Esto es crucial para optimizar tus gastos de transporte.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5 mb-4">
+        <a class="btn btn-success btn-lg" href="/vehicles/create" role="button">¡Registra un Nuevo Vehículo Ahora!</a>
+    </div>
+
+</div>
+{% endblock %}
