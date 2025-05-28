@@ -106,7 +106,7 @@ table tr:hover {
     background-color: #e9ecef; 
 }
 
-/* Formularios */
+
 form {
     background-color: var(--light-bg);
     padding: 25px;
@@ -164,7 +164,7 @@ a.btn {
 a.btn:hover {
     background-color: #0056b3; 
 
-
+}
 .alert-success {
     background-color: #d4edda;
     color: #155724;
