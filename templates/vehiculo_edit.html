@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Editar Vehículo: {{ vehiculo.marca }} {{ vehiculo.modelo }} - Mi App{% endblock %}
+{% block title %}Editar Vehículo: {{ vehiculo.marca }} {{ vehiculo.modelo }} {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -14,11 +14,11 @@
 
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
         <div class="card-body">
-            {# La acción del formulario debe apuntar a la ruta POST de edición con el ID del vehículo #}
+            
             <form action="/vehiculos/edit/{{ vehiculo.id }}" method="post">
                 <div class="mb-3">
                     <label for="marca" class="form-label">Marca:</label>
-                    {# precargar el valor con vehiculo.marca #}
+                   
                     <input type="text" class="form-control" id="marca" name="marca" value="{{ vehiculo.marca }}" required>
                 </div>
 
@@ -38,7 +38,6 @@
                         <option value="">Selecciona un tipo de combustible</option>
                         {% if Tipo_combustibleEnum %}
                             {% for fuel_type in Tipo_combustibleEnum %}
-                                {# Selecciona la opción actual del vehículo #}
                                 <option value="{{ fuel_type.value }}" {% if vehiculo.Tipo_combustible.value == fuel_type.value %}selected{% endif %}>
                                     {{ fuel_type.value }}
                                 </option>
