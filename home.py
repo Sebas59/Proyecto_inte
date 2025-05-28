@@ -90,3 +90,10 @@ async def create_vehiculo(
 @router.get("/vehiculos_registro", tags=["Vehículos"])
 async def vehiculos_registro_exitosa(request: Request):
     return templades.TemplateResponse("vehiculo_registration_success.html", {"request": request, "title": "Registro Exitoso"})
+
+@router.delete("/vehiculos/eliminar/{vehiculo_id}", tags=["Vehículos"])
+async def eliminar_vehiculo(
+    vehiculo_id : int,
+    session : AsyncSession = Depends(get_session)
+):
+    return await eliminar_vehiculo_db(vehiculo_id, session)
