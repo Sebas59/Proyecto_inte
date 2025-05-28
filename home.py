@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from contextlib import asynccontextmanager
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 
 from data.models import *
@@ -46,3 +46,44 @@ async def vehiculos_list_html(request: Request, session : AsyncSession = Depends
         "request": request,
         "sesions": vehiculos, 
         "title": "Lista de Vehículos"})
+
+@router.get("/vehiculos/crear", tags=["Vehículos"])
+async def vehiculo_create_html(request:Request, session:AsyncSession = Depends(get_session)):
+    return templades.TemplateResponse("vehiculo_create.html", {
+        "request": request,
+        "title": "Crear Vehículo",
+        "Tipo_combustibleEnum":Tipo_combustibleEnum
+    })
+
+@router.post("/vehiculos/crear", tags=["Vehículos"]) 
+async def create_vehiculo(
+    request: Request,
+    vehiculo_data: VehiculoCreate = Depends(vehiculo_create_form), 
+    session: AsyncSession = Depends(get_session)
+):
+    """Procesa el formulario y crea un nuevo vehículo."""
+    try:
+        nuevo_vehiculo = await crear_vehiculo_db(vehiculo_data, session)
+        return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException as e:
+        return templades.TemplateResponse(
+            "vehiculo_create.html",
+            {
+                "request": request,
+                "title": "Crear Vehículo",
+                "Tipo_combustibleEnum": Tipo_combustibleEnum,
+                "error_message": e.detail 
+            },
+            status_code=e.status_code
+        )
+    except Exception as e:
+        return templades.TemplateResponse(
+            "vehiculo_create.html",
+            {
+                "request": request,
+                "title": "Crear Vehículo",
+                "Tipo_combustibleEnum": Tipo_combustibleEnum,
+                "error_message": f"Ocurrió un error inesperado: {e}"
+            },
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
