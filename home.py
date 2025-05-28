@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Form
+from fastapi import APIRouter, Depends, HTTPException, status, Form, Query
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -248,3 +248,55 @@ async def actualizar_combustible(
         status_code=status.HTTP_303_SEE_OTHER
     )
 
+@router.get("/buscar_costo_tanqueo", tags=["Búsqueda"])
+async def buscar_costo_tanqueo_html(
+    request: Request,
+  
+    marca: Optional[str] = Query(None, description="Marca del vehículo"),
+    modelo: Optional[str] = Query(None, description="Modelo del vehículo"),
+    ciudad: Optional[str] = Query(None, description="Ciudad del combustible"),
+    localidad: Optional[str] = Query(None, description="Localidad del combustible"),
+    tipo_combustible: Optional[Tipo_combustibleEnum] = Query(None, description="Tipo de combustible")
+    ,session: AsyncSession = Depends(get_session)
+):
+    resultados_busqueda = []
+   
+    if marca or modelo or ciudad or localidad or tipo_combustible:
+        try:
+            resultados_busqueda = await obtener_vehiculos_con_costo_combustible_db(
+                session=session,
+                marca=marca,
+                modelo=modelo,
+                ciudad=ciudad,
+                localidad=localidad,
+                tipo_combustible=tipo_combustible
+            )
+            if not resultados_busqueda:
+
+                error_message = "No se encontraron vehículos o precios de combustible que coincidan con los criterios de búsqueda."
+            else:
+                error_message = None
+        except HTTPException as e:
+            error_message = e.detail
+            resultados_busqueda = [] 
+        except Exception as e:
+            error_message = f"Ocurrió un error inesperado durante la búsqueda: {e}"
+            resultados_busqueda = []
+    else:
+        error_message = None 
+
+    return templades.TemplateResponse(
+        "buscar_resutados.html", 
+        {
+            "request": request,
+            "title": "Resultados de Búsqueda de Costo de Tanqueo",
+            "resultados": resultados_busqueda,
+            "error_message": error_message,
+            "marca_buscada": marca, 
+            "modelo_buscado": modelo,
+            "ciudad_buscada": ciudad,
+            "localidad_buscada": localidad,
+            "tipo_combustible_buscado": tipo_combustible,
+            "Tipo_combustibleEnum": Tipo_combustibleEnum 
+        }
+    )
