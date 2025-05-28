@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Búsqueda de Costo de Tanqueo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-primary">Buscar Costo de Tanqueo</h1>
+
+    {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Error:</strong> {{ error_message }}
+        </div>
+    {% endif %}
+
+    <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+        <div class="card-body">
+      
+            <form action="/buscar_costo_tanqueo" method="get">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="marca" class="form-label">Marca Vehículo:</label>
+                        <input type="text" class="form-control" id="marca" name="marca" 
+                               placeholder="Ej: Toyota" value="{{ marca_buscada | default('') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="modelo" class="form-label">Modelo Vehículo:</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" 
+                               placeholder="Ej: Corolla" value="{{ modelo_buscado | default('') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="ciudad" class="form-label">Ciudad Combustible:</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" 
+                               placeholder="Ej: Bogota" value="{{ ciudad_buscada | default('') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="localidad" class="form-label">Localidad Combustible:</label>
+                        <input type="text" class="form-control" id="localidad" name="localidad" 
+                               placeholder="Ej: Engativa" value="{{ localidad_buscada | default('') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
+                        <select class="form-select" id="tipo_combustible" name="tipo_combustible">
+                            <option value="">Cualquiera</option>
+                            {% if Tipo_combustibleEnum %}
+                                {% for fuel_type in Tipo_combustibleEnum %}
+                                    <option value="{{ fuel_type.value }}" 
+                                            {% if tipo_combustible_buscado == fuel_type.value %}selected{% endif %}>
+                                        {{ fuel_type.value }}
+                                    </option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary me-2">Buscar</button>
+                    <a href="/buscar_costo_tanqueo" class="btn btn-secondary">Limpiar Búsqueda</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="mt-5 mb-3">Resultados</h2>
+
+
+    {% if resultados %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover shadow-sm rounded">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Tipo Combustible</th>
+                        <th>Tamaño Tanque (gal)</th>
+                        <th>Ciudad Combustible</th>
+                        <th>Localidad Combustible</th>
+                        <th>Precio/Galón</th>
+                        <th>Costo Tanqueo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in resultados %}
+                    <tr>
+                        <td>{{ item.marca }}</td>
+                        <td>{{ item.modelo }}</td>
+                        <td>{{ item.year }}</td>
+                        <td>{{ item.Tipo_combustible.value }}</td>
+                        <td>{{ item.Tan_size }}</td>
+                        <td>{{ item.ciudad }}</td>
+                        <td>{{ item.localidad }}</td>
+                        <td>{{ item.precio_por_galon }}</td>
+                        <td>{{ item.costo_tanqueo }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% elif marca_buscada or modelo_buscado or ciudad_buscada or localidad_buscada or tipo_combustible_buscado %}
+
+        <div class="alert alert-info" role="alert">
+            No se encontraron resultados para los criterios de búsqueda especificados.
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Ingresa criterios de búsqueda para encontrar costos de tanqueo.
+        </div>
+    {% endif %}
+
+    <a href="/" class="btn btn-secondary mt-3">Volver al Inicio</a>
+</div>
+{% endblock %}
