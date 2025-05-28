@@ -217,7 +217,7 @@ async def obtener_vehiculos_con_costo_combustible_db(
                     precio_por_galon=combustible.precio_por_galon,
                     ciudad=combustible.ciudad,
                     localidad=combustible.localidad,
-                    costo_tanqueo=costo_total
+                    costo_total=costo_total
                 )
             )
     
