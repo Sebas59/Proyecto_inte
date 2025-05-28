@@ -41,8 +41,8 @@
                         <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
                         <select class="form-select" id="tipo_combustible" name="tipo_combustible">
                             <option value="">Cualquiera</option>
-                            {% if tipo_combustibleEnum %}
-                                {% for fuel_type in tipo_combustibleEnum %}
+                            {% if Tipo_combustibleEnum %}
+                                {% for fuel_type in Tipo_combustibleEnum %}
                                     <option value="{{ fuel_type.value }}" 
                                             {% if tipo_combustible_buscado == fuel_type.value %}selected{% endif %}>
                                         {{ fuel_type.value }}
