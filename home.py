@@ -40,6 +40,9 @@ async def leer_home(request: Request):
     return templades.TemplateResponse("home.html", {"request": request})
 
 @router.get("/vehiculos", response_model=HTMLResponse, tags=["Vehículos"])
-async def vehiculos_list_html(resquest: Request, session : AsyncSession = Depends(get_session)):
+async def vehiculos_list_html(request: Request, session : AsyncSession = Depends(get_session)):
     vehiculos = await obtener_vehiculos_db(session)
-    return templades.TemplateResponse("vehiculos_list.html", {"request": resquest, "vehiculos": vehiculos, "title": "Lista de Vehículos"})
+    return templades.TemplateResponse("vehiculos.html", {
+        "request": request,
+        "sesions": vehiculos, 
+        "title": "Lista de Vehículos"})
