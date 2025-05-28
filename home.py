@@ -194,3 +194,18 @@ async def create_vehiculo(
             },
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@router.post("/combustilbe/eliminar/{combustible_id}", tags=["Combustibles"])
+async def eliminar_combustible(
+    combustible_id : int,
+    session : AsyncSession = Depends(get_session)
+):
+    try:
+        await eliminar_precio_combustible_db(combustible_id, session)
+        return RedirectResponse(url="/combustibles", status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException as e:
+        print(f"Error al eliminar combustible: {e.detail}")
+        return RedirectResponse(
+            url="/combustibles",
+            status_code=status.HTTP_303_SEE_OTHER
+        )
