@@ -1,47 +1,53 @@
 {% extends "base.html" %}
 
-{% block title %}Combustible{% endblock %}
+{% block title %}Listado de Combustible{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Listado de Combustible</h1>
-        <a href="/combustible/crear" class="btn btn-success mb-3">Registrar Nuevo Combustible</a> 
-        <br>
-        {% if precios_combustible %}
-            <div class="table-responsive">
-                <table class="table table-striped table-hover shadow-sm rounded">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th>Ciudad</th>
-                            <th>Localidad</th>
-                            <th>Tipo de Combustible</th>
-                            <th>Precio por galones</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for combustible in precios_combustible %}
-                        <tr>
-                            <td>{{ combustible.ciudad }}</td>
-                            <td>{{ combustible.localidad }}</td>
-                            <td>{{ combustible.tipo_combustible.value }}</td>
-                            <td>{{ combustible.precio_por_galon }}</td>
-                            <td>
-                                <a href="/combustibles/edit/{{ combustible.id }}" class="btn btn-sm btn-info me-2">Editar</a>
-                                <form action="/combustible/eliminar/{{combustible.id}}" method="post" >
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este Combustible?');">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="alert alert-info" role="alert">
-                No hay Combustible registrados. ¡Sé el primero en agregar uno!
-            </div>
-        {% endif %}
+    <div class="d-flex justify-content-between align-items-center mb-4"> 
+        <h1 class="mb-0">Listado de Combustible</h1> 
     </div>
+    {% if precios_combustible %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered align-middle table-sm"> 
+                <thead class="table-dark"> 
+                    <tr>
+                        <th scope="col">#</th> 
+                        <th scope="col">Ciudad</th>
+                        <th scope="col">Localidad</th>
+                        <th scope="col">Tipo de Combustible</th>
+                        <th scope="col">Precio por galones</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for combustible in precios_combustible %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th> 
+                        <td>{{ combustible.ciudad }}</td>
+                        <td>{{ combustible.localidad }}</td>
+                        <td>{{ combustible.tipo_combustible.value }}</td> 
+                        <td>{{combustible.precio_por_galon}}</td> 
+                        <td>
+                            <div class="d-flex"> 
+                                <a href="/combustible/edit/{{ combustible.id }}" class="btn btn-sm btn-info text-white me-2" title="Editar">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                                <form action="/combustible/eliminar/{{ combustible.id }}" method="post" class="d-inline-block">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este Combustible?');" title="Eliminar">
+                                        <i class="bi bi-trash-fill"></i> Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert"> {# Cambiado a alert-warning para consistencia #}
+            No hay precios de combustible registrados aún.
+        </div>
+    {% endif %}
     <a href="/" class="btn btn-secondary mt-3">Volver a Inicio</a>
 {% endblock %}
