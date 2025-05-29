@@ -29,13 +29,10 @@
                             <td>{{ vehiculo.Tipo_combustible.value }}</td>
                             <td>{{ vehiculo.Tan_size }}</td>
                             <td>
-                               
-                                <div class="d-flex gap-2"> 
                                     <a href="/vehiculos/edit/{{ vehiculo.id }}" class="btn btn-sm btn-info">Editar</a> {# Sin me-2, gap lo maneja #}
-                                    <form action="/vehiculos/eliminar/{{vehiculo.id}}" method="post"> {# Sin style="display:inline;" #}
+                                    <form action="/vehiculos/eliminar/{{vehiculo.id}}" method="post"> 
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">Eliminar</button>
                                     </form>
-                                </div>
                             </td>
                         </tr>
                         {% endfor %}
