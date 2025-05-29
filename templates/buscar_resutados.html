@@ -20,22 +20,22 @@
                     <div class="col-md-3">
                         <label for="marca" class="form-label">Marca Vehículo:</label>
                         <input type="text" class="form-control" id="marca" name="marca" 
-                               placeholder="Ej: Toyota" value="{{ marca_buscada | default('') }}">
+                               placeholder="Ej: Toyota" value="{{ marca_buscada or '' }}">
                     </div>
                     <div class="col-md-3">
                         <label for="modelo" class="form-label">Modelo Vehículo:</label>
                         <input type="text" class="form-control" id="modelo" name="modelo" 
-                               placeholder="Ej: Corolla" value="{{ modelo_buscado | default('') }}">
+                               placeholder="Ej: Corolla" value="{{ modelo_buscado or '' }}">
                     </div>
                     <div class="col-md-3">
                         <label for="ciudad" class="form-label">Ciudad Combustible:</label>
                         <input type="text" class="form-control" id="ciudad" name="ciudad" 
-                               placeholder="Ej: Bogota" value="{{ ciudad_buscada | default('') }}">
+                               placeholder="Ej: Bogota" value="{{ ciudad_buscada or '' }}">
                     </div>
                     <div class="col-md-3">
                         <label for="localidad" class="form-label">Localidad Combustible:</label>
                         <input type="text" class="form-control" id="localidad" name="localidad" 
-                               placeholder="Ej: Engativa" value="{{ localidad_buscada | default('') }}">
+                               placeholder="Ej: Engativa" value="{{ localidad_buscada or '' }}">
                     </div>
                     <div class="col-md-4">
                         <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
@@ -44,7 +44,7 @@
                             {% if Tipo_combustibleEnum %}
                                 {% for fuel_type in Tipo_combustibleEnum %}
                                     <option value="{{ fuel_type.value }}" 
-                                            {% if tipo_combustible_buscado == fuel_type.value %}selected{% endif %}>
+                                            {% if tipo_combustible_buscado and tipo_combustible_buscado.value == fuel_type.value %}selected{% endif %}>
                                         {{ fuel_type.value }}
                                     </option>
                                 {% endfor %}
@@ -89,8 +89,8 @@
                         <td>{{ item.Tan_size }}</td>
                         <td>{{ item.ciudad }}</td>
                         <td>{{ item.localidad }}</td>
-                        <td>{{ item.precio_por_galon }}</td>
-                        <td>{{ item.costo_total }}</td>
+                        <td>${{ "%.3f"|format(item.precio_por_galon) }}</td> {# Formato para precio #}
+                        <td>${{ "%.3f"|format(item.costo_total) }}</td> {# Formato para costo total #}
                     </tr>
                     {% endfor %}
                 </tbody>
