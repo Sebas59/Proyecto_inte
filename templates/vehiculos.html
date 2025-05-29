@@ -29,8 +29,8 @@
                             <td>{{ vehiculo.Tipo_combustible.value }}</td>
                             <td>{{ vehiculo.Tan_size }}</td>
                             <td>
-                                {# Contenedor Flexbox para los botones de acción #}
-                                <div class="d-flex gap-2"> {# CLAVE: d-flex y gap-2 para alinear y espaciar #}
+                               
+                                <div class="d-flex gap-2"> 
                                     <a href="/vehiculos/edit/{{ vehiculo.id }}" class="btn btn-sm btn-info">Editar</a> {# Sin me-2, gap lo maneja #}
                                     <form action="/vehiculos/eliminar/{{vehiculo.id}}" method="post"> {# Sin style="display:inline;" #}
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">Eliminar</button>
