@@ -32,11 +32,9 @@
                                 <a href="/combustible/edit/{{ combustible.id }}" class="btn btn-sm btn-info text-white me-2" title="Editar">
                                     <i class="bi bi-pencil-square"></i> Editar
                                 </a>
-                                <form action="/combustible/eliminar/{{ combustible.id }}" method="post" class="d-inline-block">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este Combustible?');" title="Eliminar">
-                                        <i class="bi bi-trash-fill"></i> Eliminar
-                                    </button>
-                                </form>
+                                <a href="/combustible/eliminar/{{ combustible.id }}" class="btn btn-sm btn-danger" title="Eliminar" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">
+                                    <i class="bi bi-trash-fill"></i> Eliminar
+                                </a>
                             </div>
                         </td>
                     </tr>
