@@ -1,49 +1,55 @@
-{% extends "base.html" %}
+{% extends 'base.html' %} 
 
-{% block title %}Vehículos{% endblock %}
+{% block title %}Listado de Vehículos{% endblock %} 
 
-{% block content %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Listado de Vehículos</h1>
-        <a href="/vehiculos/crear" class="btn btn-success mb-3">Registrar Nuevo Vehículo</a>
+{% block content %} 
 
-        {% if vehiculos %}
-            <div class="table-responsive">
-                <table class="table table-striped table-hover shadow-sm rounded">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th>Marca</th>
-                            <th>Modelo</th>
-                            <th>Año</th>
-                            <th>Tipo de Combustible</th>
-                            <th>Tamaño del Tanque (galones)</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for vehiculo in vehiculos %}
-                        <tr>
-                            <td>{{ vehiculo.marca }}</td>
-                            <td>{{ vehiculo.modelo }}</td>
-                            <td>{{ vehiculo.year }}</td>
-                            <td>{{ vehiculo.Tipo_combustible.value }}</td>
-                            <td>{{ vehiculo.Tan_size }}</td>
-                            <td>
-                                    <a href="/vehiculos/edit/{{ vehiculo.id }}" class="btn btn-sm btn-info">Editar</a> {# Sin me-2, gap lo maneja #}
-                                    <form action="/vehiculos/eliminar/{{vehiculo.id}}" method="post"> 
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">Eliminar</button>
-                                    </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="alert alert-info" role="alert">
-                No hay vehículos registrados. ¡Sé el primero en agregar uno!
-            </div>
-        {% endif %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Listado de Vehículos</h1>
+</div>
+
+{% if vehiculos %} 
+<div class="table-responsive"> 
+    <table class="table table-striped table-hover table-bordered align-middle table-sm"> {# ¡Aquí está la clase para hacerla más compacta! #}
+        <thead class="table-dark"> 
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Año</th>
+                <th scope="col">Tipo de Combustible</th> {# Cambiado el encabezado #}
+                <th scope="col">Tamaño del Tanque (Galones)</th> {# Cambiado el encabezado #}
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vehiculo in vehiculos %} 
+            <tr>
+                <th scope="row">{{ loop.index }}</th> 
+                <td>{{ vehiculo.marca }}</td>
+                <td>{{ vehiculo.modelo }}</td>
+                <td>{{ vehiculo.anio }}</td>
+                <td>{{ vehiculo.tipo_combustible }}</td> {# Asegúrate de que este sea el nombre correcto del atributo #}
+                <td>{{ vehiculo.tamano_tanque_galones }}</td> {# Asegúrate de que este sea el nombre correcto del atributo #}
+                <td>
+                    <div class="d-flex"> {# ¡Contenedor Flexbox para los botones! #}
+                        <a href="/vehiculos/editar/{{ vehiculo.id }}" class="btn btn-sm btn-info text-white me-2" title="Editar">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a href="/vehiculos/eliminar/{{ vehiculo.id }}" class="btn btn-sm btn-danger" title="Eliminar" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">
+                            <i class="bi bi-trash-fill"></i> Eliminar
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        No hay vehículos registrados aún.
     </div>
-    <a href="/" class="btn btn-secondary mt-3">Volver a Inicio</a>
+{% endif %}
+
 {% endblock %}
