@@ -17,8 +17,8 @@
                 <th scope="col">Marca</th>
                 <th scope="col">Modelo</th>
                 <th scope="col">Año</th>
-                <th scope="col">Tipo de Combustible</th> {# Cambiado el encabezado #}
-                <th scope="col">Tamaño del Tanque (Galones)</th> {# Cambiado el encabezado #}
+                <th scope="col">Tipo de Combustible</th> 
+                <th scope="col">Tamaño del Tanque (Galones)</th> 
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -28,11 +28,11 @@
                 <th scope="row">{{ loop.index }}</th> 
                 <td>{{ vehiculo.marca }}</td>
                 <td>{{ vehiculo.modelo }}</td>
-                <td>{{ vehiculo.anio }}</td>
-                <td>{{ vehiculo.tipo_combustible }}</td> {# Asegúrate de que este sea el nombre correcto del atributo #}
-                <td>{{ vehiculo.tamano_tanque_galones }}</td> {# Asegúrate de que este sea el nombre correcto del atributo #}
+                <td>{{ vehiculo.year }}</td>
+                <td>{{ vehiculo.Tipo_combustible }}</td> 
+                <td>{{ vehiculo.Tan_size }}</td> 
                 <td>
-                    <div class="d-flex"> {# ¡Contenedor Flexbox para los botones! #}
+                    <div class="d-flex"> 
                         <a href="/vehiculos/editar/{{ vehiculo.id }}" class="btn btn-sm btn-info text-white me-2" title="Editar">
                             <i class="bi bi-pencil-square"></i> Editar
                         </a>
