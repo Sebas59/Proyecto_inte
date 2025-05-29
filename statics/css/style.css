@@ -23,63 +23,6 @@ body {
     padding: 0 15px; 
 }
 
-.navbar {
-    background-color: var(--dark-bg); 
-    padding: 1rem 1rem; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-}
-
-
-.navbar-brand {
-    color: var(--light-text); 
-    font-weight: bold;
-    font-size: 1.5rem; 
-    transition: color 0.3s ease;
-}
-
-.navbar-brand:hover {
-    color: var(--primary-color); 
-}
-
-
-.navbar-nav .nav-link {
-    color: var(--light-text); 
-    font-weight: 500; 
-    padding: 0.5rem 1rem; 
-    border-radius: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-}
-
-
-.navbar-nav .nav-link:hover {
-    color: var(--light-text); 
-    background-color: rgba(255, 255, 255, 0.1); 
-    transform: translateY(-2px); 
-}
-
-.navbar-nav .nav-link.active {
-    background-color: var(--primary-color); 
-    color: var(--light-text); 
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.navbar .btn-outline-light {
-    color: var(--light-text); 
-    border-color: var(--light-text); 
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-.navbar .btn-outline-light:hover {
-    background-color: var(--primary-color); 
-    color: var(--light-text); 
-    border-color: var(--primary-color); 
-}
-
-.navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.5); 
-}
-
 main {
     padding: 20px 0;
 }
