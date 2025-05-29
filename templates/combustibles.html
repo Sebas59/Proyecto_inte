@@ -28,7 +28,7 @@
                             <td>{{ combustible.precio_por_galon }}</td>
                             <td>
                                 <a href="/combustibles/edit/{{ combustible.id }}" class="btn btn-sm btn-info me-2">Editar</a>
-                                <form action="/combustible/eliminar/{{combustible.id}}" method="post" style="display:inline;">
+                                <form action="/combustible/eliminar/{{combustible.id}}" method="post" >
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este Combustible?');">Eliminar</button>
                                 </form>
                             </td>
