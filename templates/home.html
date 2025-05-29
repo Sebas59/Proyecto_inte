@@ -5,23 +5,27 @@
 {% block content %}
 <div class="container mt-5">
     <div class="jumbotron text-center bg-light p-5 rounded shadow-sm">
-        <h1 class="display-4 text-primary mb-4">Bienvenido a la Plataforma de Vehículos y Combustibles</h1>
+        <h1 class="display-4 text-primary mb-4"><strong>Bienvenido a la Plataforma de Vehículos y Combustibles</strong> </h1>
         <p class="lead">Explora, gestiona y visualiza información clave sobre tus vehículos de combustión y los precios de combustible.</p>
         <hr class="my-4">
-        <p>Nuestra aplicación te permite mantener un registro detallado de tus automóviles, así como acceder a los precios más recientes de los diferentes tipos de combustible en tu zona.</p>
+        <p>Nuestra aplicación te permite mantener un registro detallado de tus automóviles, así como acceder a los precios de los diferentes tipos de combustible.</p>
         
-        <div class="mt-4">
-             <a class="btn btn-success btn-lg" href="/vehiculos/crear" role="button">¡Registra un Nuevo Vehículo Ahora!</a>
+       <div class="mt-4">
+                <a class="btn btn-success btn-lg btn-no-shadow" href="/vehiculos/crear" role="button">
+                    ¡Registra un Nuevo Vehículo Ahora!
+                </a>
+            </div>
         </div>
     </div>
 
+    
    
     <h2 class="text-center mt-5 mb-4 text-primary">Nuestras Funcionalidades Clave</h2>
     <div class="cards-container"> 
-        <a href="/vehiculos" class="info-card">
-            <img src="{{ url_for('statics', path='img/motor.jpg') }}" alt="Vehículos de Combustión">
+        <a  class="info-card">
+            <img src="{{ url_for('statics', path='img/motors2.png') }}" alt="Vehículos de Combustión">
             <div class="info-card-overlay">
-                <h3><i class="bi bi-car me-2"></i>Vehículos de Combustión</h3>
+                <h3><i class="bi bi-car-pump me-2"></i></h3>
                 <p>
                     Los vehículos de combustión interna, impulsados por gasolina, diésel o gas, han sido la columna vertebral del transporte global durante más de un siglo. Su funcionamiento se basa en la quema controlada de combustible dentro de un motor para generar la energía necesaria para el movimiento. Aunque la tecnología avanza hacia alternativas más ecológicas, los motores de combustión siguen siendo dominantes y fundamentales para la infraestructura actual.
                 </p>
@@ -31,10 +35,10 @@
             </div>
         </a>
 
-        <a href="/combustibles" class="info-card">
-            <img src="{{ url_for('statics', path='img/gaso.jpg') }}" alt="Tipos de Combustible">
+        <a  class="info-card">
+            <img src="{{ url_for('statics', path='img/gasolinas3.png') }}" alt="Tipos de Combustible">
             <div class="info-card-overlay">
-                <h3><i class="bi bi-fuel-pump me-2"></i>Tipos de Combustible</h3>
+                <h3><i class="bi bi-fuel-pump me-2"></i></h3>
                 <p>
                     Los combustibles fósiles como la gasolina y el diésel son esenciales para el funcionamiento de la mayoría de los vehículos de combustión. La gasolina se utiliza principalmente en motores de encendido por chispa, mientras que el diésel alimenta los motores de compresión. La eficiencia del combustible y su octanaje son factores clave que influyen en el rendimiento y la economía de los vehículos.
                 </p>
@@ -44,10 +48,10 @@
             </div>
         </a>
 
-        <a href="/buscar_costo_tanqueo" class="info-card">
-            <img src="{{ url_for('statics', path='img/costo.png') }}" alt="Búsqueda de Costo de Tanqueo">
+        <a  class="info-card">
+            <img src="{{ url_for('statics', path='img/costos1.png') }}" alt="Búsqueda de Costo de Tanqueo">
             <div class="info-card-overlay">
-                <h3><i class="bi bi-calculator me-2"></i>Costo de Tanqueo</h3>
+                <h3><i class="bi bi-calculator me-2"></i></h3>
                 <p>
                     Estima el costo total de llenar el tanque de tu vehículo. Nuestra herramienta te permite calcularlo basándose en la marca, modelo, tamaño del tanque de tu vehículo y los precios de combustible actualizados en diferentes ciudades y localidades.
                 </p>
