@@ -1,7 +1,7 @@
 :root {
-    --primary-color: #007bff;
+    --primary-color: #6096ba;
     --secondary-color: #6c757d;
-    --accent-color: #28a745;
+    --accent-color: #274c77;
     --light-text: #f8f9fa;
     --dark-bg: #343a40;
     --light-bg: #ffffff;
@@ -12,7 +12,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f4f7f6;
+    background-color: #e7ecef;
     margin: 0;
     padding: 0;
 }
@@ -28,7 +28,7 @@ main {
 }
 
 h1, h2, h3 {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
     margin-bottom: 1rem;
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0.5rem;
@@ -50,7 +50,7 @@ table {
 table th,
 table td {
     padding: 12px 15px;
-    text-align: left;
+    text-align: center;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -81,7 +81,7 @@ form label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #555;
+    color: #555555;
 }
 
 form input[type="text"],
@@ -138,8 +138,8 @@ a.btn {
     color: var(--light-text) !important; 
 }
 .btn-secondary:hover {
-    background-color: #5a6268 !important;
-    border-color: #5a6268 !important;
+    background-color: #661c06 !important;
+    border-color: #661c06 !important;
 }
 
 .btn-success {
@@ -148,8 +148,8 @@ a.btn {
     color: var(--light-text) !important; 
 }
 .btn-success:hover {
-    background-color: #218838 !important;
-    border-color: #218838 !important;
+    background-color: #065d03 !important;
+    border-color: #065d03  !important;
 }
 
 
@@ -212,6 +212,7 @@ footer {
     margin-top: 50px;
 }
 
+
 .info-card {
     position: relative;
     width: 90%; 
@@ -222,25 +223,14 @@ footer {
     overflow: hidden;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease; 
     text-decoration: none;
-    color: inherit;
+    color: inherit; 
 }
-
-/* Nuevas reglas para la tarjeta de "Información" */
-.info-card-info-button {
-    width: 200px; /* Ancho ajustado para este botón específico */
-    height: 100px; /* Alto ajustado para este botón específico */
-    /* Puedes ajustar padding o font-size si es necesario */
-    padding: 25px; /* Ejemplo de ajuste de padding */
-    font-size: 1.1em; /* Ejemplo de ajuste de tamaño de fuente */
-}
-
 
 .info-card:hover {
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    /* Asegúrate de que tu transformación de hover (ej. translateY) esté aquí si la quieres en todas */
-    /* transform: translateY(-5px); */ /* Si quieres un efecto de elevación en hover */
+    transform: translateY(-5px); 
 }
 
 .info-card img {
@@ -260,7 +250,7 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 123, 255, 0.9); 
+    background-color: rgba(44, 45, 46, 0.9); 
     color: white;
     display: flex;
     flex-direction: column;
@@ -292,6 +282,40 @@ footer {
     color: white;
 }
 
+.info-card-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--light-text) !important; 
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.info-card-action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    background-color: #0056b3; 
+}
+
+
+
+.custom-hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+
+.custom-hover-effect:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 12px 24px rgba(0,0,0,0.2); 
+}
+
 
 @media (max-width: 576px) { 
     .info-card {
@@ -306,5 +330,20 @@ footer {
     .info-card-overlay p {
         font-size: 0.85rem; 
         line-height: 1.3;
+    }
+ 
+    .info-card-action-button {
+        width: 100%; 
+        padding: 12px 20px;
+    }
+    .card {
+        width: 100% !important; 
+        margin: 10px auto; 
+    }
+ 
+    .custom-hover-effect {
+        width: 95%; 
+        font-size: 1.1rem; 
+        padding: 0.6rem 1.2rem; 
     }
 }
