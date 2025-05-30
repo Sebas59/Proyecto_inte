@@ -169,10 +169,25 @@ async def crear_combustible_precio_db(combustible:CombustibleCreate, session:Asy
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al crear el precio del combustible") 
     
-async def obtener_precio_combustible_db(session:AsyncSession)->List[CombustibleRead]:
-    result = await session.execute(select(Combustible))
-    precio_combustible = result.scalars().all()
-    return precio_combustible
+async def obtener_precio_combustible_db(
+    session: AsyncSession,
+    ciudad: Optional[str] = None, 
+    localidad: Optional[str] = None 
+) -> List[CombustibleRead]: 
+    query = select(Combustible)
+    conditions = []
+
+    if ciudad:
+        conditions.append(Combustible.ciudad.ilike(f"%{ciudad}%"))
+    if localidad:
+        conditions.append(Combustible.localidad.ilike(f"%{localidad}%"))
+
+    if conditions:
+        query = query.where(and_(*conditions))
+
+    result = await session.execute(query)
+    precios_combustible = result.scalars().all()
+    return precios_combustible
 
 async def actualizar_precio_combustible_db(id:int, combustible:CombustibleCreate, session:AsyncSession)->Combustible:
     nuevo_precio = await session.get(Combustible, id)
@@ -189,26 +204,74 @@ async def actualizar_precio_combustible_db(id:int, combustible:CombustibleCreate
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al actualizar el precio del combustible")
     
-async def eliminar_precio_combustible_db(id:int, session:AsyncSession)->Combustible:
-    precio_eliminado = await session.get(Combustible,id)
-    if not precio_eliminado:
-        raise HTTPException(status_code=404, detail=("Precio de combustible no encontrado"))
-    
+async def eliminar_combustible_db(id:int, session:AsyncSession)->Combustible:
+    combustible_a_eliminar = await session.get(Combustible, id)
+    if not combustible_a_eliminar:
+        raise HTTPException(status_code=404, detail="Combustible no encontrado")
     historico = CombustibleHistorico(
-        original_id=precio_eliminado.id,
-        ciudad=precio_eliminado.ciudad,
-        localidad=precio_eliminado.localidad,
-        tipo_combustible=precio_eliminado.tipo_combustible,
-        precio_por_galon=precio_eliminado.precio_por_galon
+        original_id=combustible_a_eliminar.id,
+        ciudad=combustible_a_eliminar.ciudad,
+        localidad=combustible_a_eliminar.localidad,
+        tipo_combustible=combustible_a_eliminar.tipo_combustible,
+        precio_por_galon=combustible_a_eliminar.precio_por_galon
     )
     session.add(historico)
-    await session.delete(precio_eliminado)
+    await session.delete(combustible_a_eliminar)
     try:
         await session.commit()
-        return precio_eliminado
+        return combustible_a_eliminar
     except IntegrityError:
         await session.rollback()
-        raise HTTPException(status_doce=404, detail=("Eror al eliminar el precio de combustible"))
+        raise HTTPException(status_code=404, detail="Error al eliminar el combustible")
+
+async def restaurar_combustible_db(historico_id: int, session: AsyncSession) -> Combustible: 
+    combustible_hist = await session.get(CombustibleHistorico, historico_id) 
+    if not combustible_hist:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Registro histórico de combustible no encontrado")
+    
+    combustible_data = {
+        "ciudad": combustible_hist.ciudad,
+        "localidad": combustible_hist.localidad,
+        "tipo_combustible": combustible_hist.tipo_combustible,
+        "precio_por_galon": combustible_hist.precio_por_galon,
+    }
+    
+    nuevo_combustible = Combustible(**combustible_data) 
+    session.add(nuevo_combustible)
+    
+    await session.delete(combustible_hist) 
+    
+    try:
+        await session.commit()
+        await session.refresh(nuevo_combustible) 
+        return nuevo_combustible
+    except IntegrityError as e:
+        await session.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Error de integridad al restaurar combustible: {e}")
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error inesperado al restaurar combustible: {e}")
+
+async def obtener_combustible_historico_db(
+    session: AsyncSession,
+    ciudad: Optional[str] = None,
+    localidad: Optional[str] = None
+) -> List[CombustibleHistorico]:
+   
+    query = select(CombustibleHistorico)
+    conditions = []
+
+    if ciudad:
+        conditions.append(CombustibleHistorico.ciudad.ilike(f"%{ciudad}%"))
+    if localidad:
+        conditions.append(CombustibleHistorico.localidad.ilike(f"%{localidad}%"))
+
+    if conditions:
+        query = query.where(and_(*conditions))
+
+    result = await session.execute(query)
+    combustibles_historico = result.scalars().all()
+    return combustibles_historico
 
 async def obtener_vehiculos_con_costo_combustible_db(
     session: AsyncSession,
