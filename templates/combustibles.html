@@ -5,6 +5,9 @@
 {% block content %}
     <div class="d-flex justify-content-between align-items-center mb-4"> 
         <h1 class="mb-0">Listado de Combustible</h1> 
+        <a href="/combustible/historial-eliminados" class="btn btn-secondary custom-hover-effect">
+        <i class="bi bi-archive-fill me-2"></i> Ver Historial Eliminados
+    </a>
     </div>
     {% if precios_combustible %}
         <div class="table-responsive">
@@ -29,12 +32,15 @@
                         <td>{{combustible.precio_por_galon}}</td> 
                         <td>
                             <div class="d-flex"> 
-                                <a href="/combustibles/edit/{{ combustible.id }}" class="btn btn-sm btn-info text-white me-2" title="Editar">
-                                    <i class="bi bi-pencil-square"></i> Editar
+                                <a href="/combustibles/edit/{{ combustible.id }}" class="btn btn-info btn-sm custom-hover-effect">
+                                    <i class="bi bi-pencil-square me-1"></i> Editar
                                 </a>
-                                <a href="/combustible/eliminar/{{ combustible.id }}" class="btn btn-sm btn-danger" title="Eliminar" onclick="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');">
-                                    <i class="bi bi-trash-fill"></i> Eliminar
-                                </a>
+                                <form action="/combustible/eliminar/{{ combustible.id }}" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');"
+                                    class="d-inline-block p-0 m-0 border-0 bg-transparent"> 
+                                    <button type="submit" class="btn btn-danger btn-sm custom-hover-effect">
+                                        <i class="bi bi-trash-fill me-1"></i> Eliminar
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -47,5 +53,7 @@
             No hay precios de combustible registrados aún.
         </div>
     {% endif %}
-    <a href="/" class="btn btn-secondary mt-3">Volver a Inicio</a>
+        <a href="/" class="btn btn-primary custom-hover-effect">
+            <i class="bi bi-arrow-left-circle-fill me-2"></i> Volver a Inicio
+        </a>
 {% endblock %}
