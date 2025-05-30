@@ -35,8 +35,22 @@ async def crear_vehiculo_db(vehiculo:VehiculoCreate, session:AsyncSession)->Vehi
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al crear el vehiculo")
     
-async def obtener_vehiculos_db(session:AsyncSession)->List[VehiculoRead]:
-    result = await session.execute(select(Vehiculo))
+async def obtener_vehiculos_db(
+        session:AsyncSession,
+        marca : Optional[str] = None,
+        modelo : Optional[str] = None
+        )->List[Vehiculo]:
+    
+    query = select(Vehiculo)
+    condition = []
+    if marca:
+        condition.append(Vehiculo.marca.ilike(f"%{marca}"))
+    if modelo:
+        condition.append(Vehiculo.modelo.ilike(f"%{modelo}"))
+    if condition:
+        query = query.where(and_(*condition))
+    
+    result = await session.execute(query)
     vehiculos = result.scalars().all()
     return vehiculos
 
@@ -75,7 +89,49 @@ async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
     except IntegrityError:
         await session.rollback()
         raise HTTPException(status_code=404, detail="Error al eliminar el vehiculo")
+
+async def retaurar_vehiculo_db(historico_id:int, session:AsyncSession):
+    vehiculo_hist= await session.get(VehiculoHistorico, historico_id)
+    if not vehiculo_hist:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Registro historico de vehiculo no encontrado")
+    vehiculo_data={
+        "marca" : vehiculo_hist.marca,
+        "modelo" : vehiculo_hist.modelo,
+        "year" : vehiculo_hist.year,
+        "Tipo_combustible" : vehiculo_hist.Tipo_combustible,
+        "Tan_size" : vehiculo_hist.Tan_size,
+    }
+    nuevo_vehiculo = Vehiculo(**vehiculo_data)
+    session.add(nuevo_vehiculo)
+    await session.delete(vehiculo_hist)
+    try:
+        await session.commit()
+        await session.refresh(nuevo_vehiculo)
+        return nuevo_vehiculo
+    except IntegrityError as e:
+        await session.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error inesperado al restaurar vehiculo")
     
+async def obtener_vehiculo_historico_db(
+        session:AsyncSession,
+        marca : Optional[str] = None,
+        modelo : Optional[str] = None
+        ):
+    query = select(VehiculoHistorico)
+    conditions = []
+
+    if marca:
+        conditions.append(VehiculoHistorico.marca.ilike(f"%{marca}%"))
+    if modelo:
+        conditions.append(VehiculoHistorico.modelo.ilike(f"%{modelo}%"))
+
+    if conditions:
+        query = query.where(and_(*conditions))
+
+    result = await session.execute(query)
+    vehiculos_historico = result.scalars().all()
+    return vehiculos_historico
+   
 
 async def obtener_vehiculo_por_marca_modelo_db(marca:str,modelo:str, session:AsyncSession)->List[Vehiculo]:
     result = await session.execute(
