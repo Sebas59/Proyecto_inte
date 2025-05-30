@@ -5,14 +5,14 @@
 {% block content %}
 <div class="container mt-5">
     <div class="jumbotron text-center bg-light p-5 rounded shadow-sm">
-        <h1 class="display-4 text-primary mb-4"><strong>Bienvenido a la Plataforma de Vehículos y Combustibles</strong> </h1>
+        <h1 class="display-4  mb-4"><strong>Bienvenido a la Plataforma de Vehículos y Combustibles</strong> </h1>
         <p class="lead">Explora, gestiona y visualiza información clave sobre tus vehículos de combustión y los precios de combustible.</p>
         <hr class="my-4">
         <p>Nuestra aplicación te permite mantener un registro detallado de tus automóviles, así como acceder a los precios de los diferentes tipos de combustible.</p>
-        
-       <div class="mt-4">
-                <a class="btn btn-success btn-lg btn-no-shadow" href="/vehiculos/crear" role="button">
-                    ¡Registra un Nuevo Vehículo Ahora!
+        <div class="cards-container mt-4">
+           <div class="mt-4">
+                <a class="btn btn-success btn-lg custom-hover-effect" href="/vehiculos/crear" role="button">
+                    <i class="bi bi-plus-circle-fill me-2"></i>¡Registra un Nuevo Vehículo Ahora!
                 </a>
             </div>
         </div>
@@ -20,7 +20,7 @@
 
     
    
-    <h2 class="text-center mt-5 mb-4 text-primary">Nuestras Funcionalidades Clave</h2>
+    <h2 class="text-center mt-5 mb-4 ">Nuestras Funcionalidades Clave</h2>
     <div class="cards-container"> 
         <a  class="info-card">
             <img src="{{ url_for('statics', path='img/motors2.png') }}" alt="Vehículos de Combustión">
@@ -38,7 +38,7 @@
         <a  class="info-card">
             <img src="{{ url_for('statics', path='img/gasolinas3.png') }}" alt="Tipos de Combustible">
             <div class="info-card-overlay">
-                <h3><i class="bi bi-fuel-pump me-2"></i></h3>
+                
                 <p>
                     Los combustibles fósiles como la gasolina y el diésel son esenciales para el funcionamiento de la mayoría de los vehículos de combustión. La gasolina se utiliza principalmente en motores de encendido por chispa, mientras que el diésel alimenta los motores de compresión. La eficiencia del combustible y su octanaje son factores clave que influyen en el rendimiento y la economía de los vehículos.
                 </p>
@@ -51,7 +51,7 @@
         <a  class="info-card">
             <img src="{{ url_for('statics', path='img/costos1.png') }}" alt="Búsqueda de Costo de Tanqueo">
             <div class="info-card-overlay">
-                <h3><i class="bi bi-calculator me-2"></i></h3>
+ 
                 <p>
                     Estima el costo total de llenar el tanque de tu vehículo. Nuestra herramienta te permite calcularlo basándose en la marca, modelo, tamaño del tanque de tu vehículo y los precios de combustible actualizados en diferentes ciudades y localidades.
                 </p>
