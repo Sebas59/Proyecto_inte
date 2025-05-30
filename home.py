@@ -10,22 +10,7 @@ from sqlalchemy.future import select
 from data.models import *
 from utils.connection_db import *
 from data.schemas import *
-from operations.operations_db import ( 
-    obtener_vehiculos_db,
-    crear_vehiculo_db,
-    actualizar_vehiculo_db,
-    eliminar_vehiculo_db,
-    obtener_vehiculo_por_marca_modelo_db,
-    vehiculo_create_form, 
-    combustible_create_form, 
-    crear_combustible_precio_db, 
-    obtener_precio_combustible_db, 
-    actualizar_precio_combustible_db, 
-    eliminar_precio_combustible_db, 
-    obtener_vehiculos_con_costo_combustible_db ,
-    obtener_vehiculo_historico_db,
-    retaurar_vehiculo_db
-)
+from operations.operations_db import *
 
 
 
@@ -203,13 +188,25 @@ async def restaurar_vehiculo(
         )
     
 @router.get("/combustibles", tags=["Combustibles"])
-async def combustible_list_html(request: Request, session: AsyncSession = Depends(get_session)):
-    precios_combustible = await obtener_precio_combustible_db(session)
+async def combustible_list_html(
+    request: Request, 
+    session: AsyncSession = Depends(get_session),
+    ciudad : Optional[str] = Query(None, description="Filtrar por ciudad del combustible"),
+    localidad: Optional[str] = Query(None, description="Filtrar por localidad del combustible")
+    ):
+    precios_combustible = await obtener_precio_combustible_db(
+        session=session,
+        ciudad=ciudad,
+        localidad=localidad
+        )
     return templades.TemplateResponse("combustibles.html",
      {
         "request": request,
         "precios_combustible": precios_combustible,
-        "title": "Lista de Combustibles"
+        "title": "Lista de Combustibles",
+        "current_ciudad": ciudad,
+        "current_localidad": localidad,
+        "Tipo_combustibleEnum": Tipo_combustibleEnum
     })
 
 @router.get("/combustible/crear", tags=["Combustibles"])
@@ -258,7 +255,7 @@ async def eliminar_combustible(
     session : AsyncSession = Depends(get_session)
 ):
     try:
-        await eliminar_precio_combustible_db(combustible_id, session)
+        await eliminar_combustible_db(combustible_id, session)
         return RedirectResponse(url="/combustibles", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
         print(f"Error al eliminar combustible: {e.detail}")
@@ -304,6 +301,51 @@ async def actualizar_combustible(
         url="/combustibles",
         status_code=status.HTTP_303_SEE_OTHER
     )
+
+
+@router.get("/combustible/historial_eliminados", tags=["Combustibles historial"])
+async def combustibles_historial_html(
+    request:Request,
+    session:AsyncSession= Depends(get_session),
+    ciudad: Optional[str] = Query(None, description="Filtrar por ciudad del combustible eliminado"),
+    localidad: Optional[str] = Query(None, description="Filtrar por localidad del combustible eliminado")
+      ):
+    combustible_historico = await obtener_combustible_historico_db(
+        session=session,
+        ciudad=ciudad,
+        localidad=localidad
+        )
+    return templades.TemplateResponse(
+        "combustible_historial.html",
+        {
+            "request" : request,
+            "combustible_historico" : combustible_historico,
+            "title" : "Historial de Combustibles Eliminados",
+            "tipo_combustibleEnum" : Tipo_combustibleEnum,
+            "current_ciudad" : ciudad,
+            "current_localidad" : localidad
+        }
+        )
+
+@router.post("/combustible/restaurar/{historico_id}", tags=["Combustibles historial"])
+async def restaurar_combustible(
+    historico_id:int,
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        await restaurar_combustible_db(historico_id, session)
+        return RedirectResponse(url="/combustibles",status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException as e:
+        print(f"Error al restaurar combustible:{e.detail}")
+        return RedirectResponse(url=f"/combustible/historial_eliminados?error_message={e.detail}", status_code=status.HTTP_303_SEE_OTHER)
+    except Exception as e:
+        print(f"Error inesperado al restaurar combustible: {e}")
+        return RedirectResponse(
+            url=f"/combustible/historial_eliminados?error_message=Ocurrió un error inesperado al restaurar el combustible. ({e})",
+            status_code=status.HTTP_303_SEE_OTHER
+        )
+
+
 
 @router.get("/buscar_costo_tanqueo", tags=["Búsqueda"])
 async def buscar_costo_tanqueo_html(
