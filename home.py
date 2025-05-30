@@ -22,7 +22,9 @@ from operations.operations_db import (
     obtener_precio_combustible_db, 
     actualizar_precio_combustible_db, 
     eliminar_precio_combustible_db, 
-    obtener_vehiculos_con_costo_combustible_db 
+    obtener_vehiculos_con_costo_combustible_db ,
+    obtener_vehiculo_historico_db,
+    retaurar_vehiculo_db
 )
 
 
@@ -40,12 +42,27 @@ async def leer_home(request: Request):
     return templades.TemplateResponse("home.html", {"request": request})
 
 @router.get("/vehiculos", tags=["Vehículos"])
-async def vehiculos_list_html(request: Request, session : AsyncSession = Depends(get_session)):
-    vehiculos = await obtener_vehiculos_db(session)
-    return templades.TemplateResponse("vehiculos.html", {
+async def vehiculos_list_html(
+    request: Request, 
+    session : AsyncSession = Depends(get_session),
+    marca : Optional[str] = Query(None, description="Filtrar por marca del vehiculo"),
+    modelo : Optional[str] = Query(None, description="Filtrar por modelo del vehiculo")
+    ):
+    vehiculos = await obtener_vehiculos_db(
+        session=session,
+        marca=marca,
+        modelo=modelo,
+        )
+    return templades.TemplateResponse(
+        "vehiculos.html", 
+        {
         "request": request,
         "vehiculos": vehiculos, 
-        "title": "Lista de Vehículos"})
+        "Tipo_combustible": Tipo_combustibleEnum,
+        "Current_marca" : marca,
+        "current_modelo" : modelo,
+        }
+        )
 
 @router.get("/vehiculos/crear", tags=["Vehículos"])
 async def vehiculo_create_html(request:Request, session:AsyncSession = Depends(get_session)):
@@ -143,8 +160,48 @@ async def actualizar_vehiculo(
         status_code=status.HTTP_303_SEE_OTHER
     )
 
+@router.get("/vehiculos/historial_eliminados", tags=["Vehiculos historial"])
+async def vehiculos_historial_html(
+    request:Request,
+    session:AsyncSession= Depends(get_session),
+    marca: Optional[str] = Query(None, description="Filtrar por marca del vehículo eliminado"),
+    modelo: Optional[str] = Query(None, description="Filtrar por modelo del vehículo eliminado")
+      ):
+    vehiculo_historico = await obtener_vehiculo_historico_db(
+        session=session,
+        marca=marca,
+        modelo=modelo
+        )
+    return templades.TemplateResponse(
+        "vehiculos_historial.html",
+        {
+            "request" : request,
+            "vehiculos_historico" : vehiculo_historico,
+            "tittle" : "Historial de Vehiculos Eliminados",
+            "Tipo_combistibleEnum" : Tipo_combustibleEnum,
+            "current_marca" : marca,
+            "current_modelo" : modelo
+        }
+        )
 
-
+@router.post("/vehiculos/restaurar/{historico_id}", tags=["Vehiculos historial"])
+async def restaurar_vehiculo(
+    historico_id:int,
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        await retaurar_vehiculo_db(historico_id, session)
+        return RedirectResponse(url="/vehiculos",status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException as e:
+        print(f"Error al restaurar vehiculo:{e.detail}")
+        return RedirectResponse(url=f"/vehiculos/historial?error_message:{e.detail}")
+    except Exception as e:
+        print(f"Error inesperado al restaurar vehiculo")
+        return RedirectResponse(
+            url=f"/vehiculos/historial?error_message=Ocurrió un error inesperado al restaurar el vehículo.",
+            status_code=status.HTTP_303_SEE_OTHER
+        )
+    
 @router.get("/combustibles", tags=["Combustibles"])
 async def combustible_list_html(request: Request, session: AsyncSession = Depends(get_session)):
     precios_combustible = await obtener_precio_combustible_db(session)
