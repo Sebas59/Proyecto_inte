@@ -13,7 +13,7 @@
 
 {% if vehiculos %} 
 <div class="table-responsive"> 
-    <table class="table table-striped table-hover table-bordered align-middle table-sm"> {# ¡Aquí está la clase para hacerla más compacta! #}
+    <table class="table table-striped table-hover table-bordered align-middle table-sm"> 
         <thead class="table-dark"> 
             <tr>
                 <th scope="col">#</th>
@@ -40,7 +40,7 @@
                             <i class="bi bi-pencil-square me-1"></i> Editar
                         </a>
                         <form action="/vehiculos/eliminar/{{ vehiculo.id }}" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este vehículo?');"
-                              class="d-inline-block p-0 m-0 border-0 bg-transparent"> {# ESTAS CLASES SON CLAVE #}
+                              class="d-inline-block p-0 m-0 border-0 bg-transparent"> 
                             <button type="submit" class="btn btn-danger btn-sm custom-hover-effect">
                                 <i class="bi bi-trash-fill me-1"></i> Eliminar
                             </button>
