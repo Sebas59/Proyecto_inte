@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Conócenos - Planeación{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="jumbotron text-center bg-light p-4 rounded shadow-sm">Planeación del Proyecto</h1>
+    
+    <div class="card shadow-lg p-4 mb-4">
+        <div class="card-body">
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm"><i class="bi bi-person-fill-gear me-2"></i> Casos de Uso</h2>
+            <p>Se identificaron los siguientes casos de uso principales para el sistema, detallando las interacciones entre el usuario y la aplicación:</p>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item"><strong>Gestión de Vehículos:</strong>
+                    <ul>
+                        <li>Registrar nuevo vehículo (marca, modelo, año, tipo combustible, tamaño tanque).</li>
+                        <li>Ver lista de vehículos (con filtros).</li>
+                        <li>Editar información de vehículo.</li>
+                        <li>Eliminar vehículo (moviéndolo a historial).</li>
+                        <li>Restaurar vehículo desde historial.</li>
+                    </ul>
+                </li>
+                <li class="list-group-item"><strong>Gestión de Precios de Combustible:</strong>
+                    <ul>
+                        <li>Registrar nuevo precio (ciudad, localidad, tipo combustible, precio por galón).</li>
+                        <li>Ver lista de precios de combustible (con filtros).</li>
+                        <li>Editar información de precio.</li>
+                        <li>Eliminar precio (moviéndolo a historial).</li>
+                        <li>Restaurar precio desde historial.</li>
+                    </ul>
+                </li>
+                <li class="list-group-item"><strong>Cálculo de Costos de Combustible:</strong>
+                    <ul>
+                        <li>Asignar combustible a un vehículo.</li>
+                        <li>Visualizar el costo de combustible por vehículo.</li>
+                    </ul>
+                </li>
+                <li class="list-group-item"><strong>Navegación:</strong>
+                    <ul>
+                        <li>Acceder a la página de inicio.</li>
+                        <li>Navegar a la lista de vehículos, precios de combustible, historiales y la sección "Conócenos".</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm"><i class="bi bi-diagram-3-fill me-2"></i> Modelo de Datos</h2>
+            <p>El siguiente diagrama representa la estructura de la base de datos y las relaciones entre las entidades principales del sistema, incluyendo los campos clave y sus tipos:</p>
+            <div class="text-center my-4">
+                
+                <img src="{{ url_for('statics', path='img/Modelado_proyecto.png') }}" alt="Diagrama de Modelo de Datos de la Base de Datos" class="img-fluid rounded shadow-sm border" style="max-height: 500px; object-fit: contain;">
+                <small class="d-block text-muted mt-2">Diagrama de Entidad-Relación (ERD) del proyecto.</small>
+            </div>
+            <p>Se definen tablas para `Vehiculo`, `Combustible`, `VehiculoHistorico` y `CombustibleHistorico`, con relaciones claras para la gestión de datos.</p>
+
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm"><i class="bi bi-signpost-2-fill me-2"></i> Objetivos Propuestos y Fuente de los Datos</h2>
+            <p>Los objetivos principales del proyecto fueron:</p>
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item">Ofrecer una solución sencilla y accesible para que los usuarios gestionen sus vehículos y el consumo de combustible.</li>
+                <li class="list-group-item">Permitir la trazabilidad de vehículos y precios de combustible, incluso después de ser "eliminados" lógicamente.</li>
+                <li class="list-group-item">Proporcionar una interfaz de usuario limpia e intuitiva que mejore la experiencia del usuario.</li>
+                <li class="list-group-item">Demostrar el uso de FastAPI con SQLModel para un desarrollo backend robusto y eficiente.</li>
+                <li class="list-group-item">Implementar un diseño frontend responsivo con Bootstrap para compatibilidad multidispositivo.</li>
+            </ul>
+            <p>La fuente de los datos para los precios de combustible se espera que provenga de una "entrada manual del usuario",
+                simulando la recopilación de información de diferentes ciudades y localidades. Para los datos de vehículos, 
+                la información también es "introducida directamente por el usuario según sus propios activos".</p>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="/informacion" class="btn btn-outline-primary custom-hover-effect me-2">
+            <i class="bi bi-arrow-left-circle me-2"></i> Volver a Conócenos
+        </a>
+        <a href="/" class="btn btn-outline-secondary custom-hover-effect">
+            <i class="bi bi-house-door-fill me-2"></i> Volver a Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}
