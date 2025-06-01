@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Conócenos{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="jumbotron text-center bg-light p-4 rounded shadow-sm">Conócenos</h1>
+            
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        
+        <div class="col">
+            <div class="card h-100 shadow custom-hover-effect">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi bi-lightbulb-fill text-warning display-3 mb-3"></i>
+                    <h5 class="card-title h3 mb-3">Planeación</h5>
+                    <p class="card-text text-muted">
+                        Descubre cómo conceptualizamos y estructuramos este proyecto desde sus cimientos.
+                    </p>
+                    <a href="/informacion/planeacion" class="btn btn-primary mt-auto custom-hover-effect">
+                        <i class="bi bi-arrow-right-circle me-2"></i> Saber Más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="col">
+            <div class="card h-100 shadow custom-hover-effect">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi bi-palette-fill text-info display-3 mb-3"></i>
+                    <h5 class="card-title h3 mb-3">Diseño</h5>
+                    <p class="card-text text-muted">
+                        Explora la estética, la experiencia de usuario y las herramientas visuales utilizadas.
+                    </p>
+                    <a href="/informacion/diseno" class="btn btn-primary mt-auto custom-hover-effect">
+                        <i class="bi bi-arrow-right-circle me-2"></i> Saber Más
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col">
+            <div class="card h-100 shadow custom-hover-effect">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
+                    <i class="bi bi-person-circle text-success display-3 mb-3"></i>
+                    <h5 class="card-title h3 mb-3">Sobre el Desarrollador</h5>
+                    <p class="card-text text-muted">
+                        Conoce más sobre el creador de esta aplicación y su visión.
+                    </p>
+                    <a href="/informacion/desarrollador" class="btn btn-primary mt-auto custom-hover-effect">
+                        <i class="bi bi-arrow-right-circle me-2"></i> Saber Más
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="/" class="btn btn-secondary custom-hover-effect mt-3">
+            <i class="bi bi-arrow-left-circle-fill me-2"></i> Volver a Inicio
+        </a>
+    </div>
+
+</div>
+{% endblock %}
