@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
 from sqlalchemy import and_, func
 from fastapi import HTTPException, status
-from typing import List, Optional
+from typing import List, Optional,Dict
 from data.models import *
 from data.schemas import *
 from fastapi import Form
@@ -158,6 +158,54 @@ def combustible_create_form(
         precio_por_galon=precio_por_galon
     )
 
+async def obtener_todos_vehiculos_simples(session: AsyncSession) -> List[Dict]:
+    """
+    Obtiene una lista de todos los vehículos (ID, marca, modelo, tipo_combustible) 
+    para poblar un desplegable.
+    """
+    try:
+        result = await session.execute(
+            select(Vehiculo.id, Vehiculo.marca, Vehiculo.modelo, Vehiculo.Tipo_combustible) 
+            .order_by(Vehiculo.marca, Vehiculo.modelo) 
+        )
+        vehiculos_data = [
+            {
+                "id": v.id, 
+                "marca": v.marca, 
+                "modelo": v.modelo,
+                "tipo_combustible": v.Tipo_combustible.value 
+            }
+            for v in result.all()
+        ]
+        return vehiculos_data
+    except Exception as e:
+        print(f"Error al obtener vehículos simples: {e}") 
+        return []
+
+async def obtener_todos_combustibles_simples(session: AsyncSession) -> List[Dict]:
+    try:
+        result = await session.execute(
+            select(Combustible.id, Combustible.tipo_combustible, Combustible.ciudad, Combustible.localidad, Combustible.precio_por_galon)
+            .order_by(Combustible.tipo_combustible, Combustible.ciudad, Combustible.localidad) 
+        )
+        combustibles_data = []
+        for c in result.all():
+            tipo_combustible_value = None
+            if c.tipo_combustible:
+                tipo_combustible_value = c.tipo_combustible.value 
+            
+            combustibles_data.append({
+                "id": c.id,
+                "tipo_combustible": tipo_combustible_value,
+                "ciudad": c.ciudad,
+                "localidad": c.localidad,
+                "precio": c.precio_por_galon
+            })
+        return combustibles_data
+    except Exception as e:
+        print(f"Error al obtener combustibles simples: {e}")
+        return []
+        
 async def crear_combustible_precio_db(combustible:CombustibleCreate, session:AsyncSession)->Combustible:
     nuevo_precio = Combustible(ciudad=combustible.ciudad, localidad=combustible.localidad ,tipo_combustible=combustible.tipo_combustible, precio_por_galon=combustible.precio_por_galon)
     session.add(nuevo_precio)
