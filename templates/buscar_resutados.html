@@ -1,4 +1,3 @@
-{# templates/buscar_resutados.html #}
 
 {% extends 'base.html' %}
 
@@ -15,7 +14,7 @@
 
             <form action="/buscar_costo_tanqueo" method="get" class="mb-4">
                 <div class="row g-3">
-                    {# Campos de Marca y Modelo #}
+ 
                     <div class="col-md-6">
                         <label for="marca" class="form-label">Marca:</label>
                         <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej: Toyota" value="{{ marca_buscada if marca_buscada else '' }}">
@@ -25,7 +24,6 @@
                         <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej: Corolla" value="{{ modelo_buscado if modelo_buscado else '' }}">
                     </div>
 
-                    {# Campos de Ciudad, Localidad y Tipo de Combustible #}
                     <div class="col-md-6">
                         <label for="ciudad" class="form-label">Ciudad:</label>
                         <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Ej: Bogotá" value="{{ ciudad_buscada if ciudad_buscada else '' }}">
@@ -43,7 +41,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                </div> {# Fin row g-3 #}
+                </div> 
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                     <button type="submit" class="btn btn-primary custom-hover-effect">
@@ -55,7 +53,7 @@
                 </div>
             </form>
 
-            {# Sección de resultados y mensajes de error #}
+            
             {% if error_message %}
                 <div class="alert alert-warning" role="alert">
                     {{ error_message }}
@@ -101,7 +99,7 @@
         </div>
     </div>
     
-    {# SECCIÓN DESPLEGABLE DE VEHÍCULOS REGISTRADOS #}
+
     <div class="card shadow-lg p-3 mt-4">
         {# Cambiamos a estilo inline CSS para usar var(--primary-color) directamente #}
         <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: var(--primary-color);" id="headingVehiculos">
@@ -148,11 +146,11 @@
             </div>
         </div>
     </div>
-    {# FIN DE LA SECCIÓN DESPLEGABLE DE VEHÍCULOS #}
+  
 
-    {# --- SECCIÓN DESPLEGABLE DE COMBUSTIBLES REGISTRADOS --- #}
+   
     <div class="card shadow-lg p-3 mt-4">
-        {# Cambiamos a estilo inline CSS para usar var(--accent-color) #}
+     
         <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: var(--accent-color);" id="headingCombustibles">
             <h2 class="mb-0 fs-5">
                 <button class="btn btn-link text-white text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCombustibles" aria-expanded="false" aria-controls="collapseCombustibles">
@@ -160,7 +158,7 @@
                 </button>
             </h2>
             <button class="btn btn-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCombustibles" aria-expanded="false" aria-controls="collapseCombustibles">
-                <i class="bi bi-chevron-down"></i> {# Icono de flecha hacia abajo #}
+                <i class="bi bi-chevron-down"></i> 
             </button>
         </div>
         <div id="collapseCombustibles" class="collapse" aria-labelledby="headingCombustibles">
@@ -199,7 +197,6 @@
             </div>
         </div>
     </div>
-    {# FIN DE LA SECCIÓN DESPLEGABLE DE COMBUSTIBLES #}
 
 
     <div class="text-center mt-4">
