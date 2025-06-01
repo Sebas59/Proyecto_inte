@@ -1,112 +1,212 @@
-{% extends "base.html" %}
+{# templates/buscar_resutados.html #}
 
-{% block title %}Búsqueda de Costo de Tanqueo{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-4 text-primary">Buscar Costo de Tanqueo</h1>
+<div class="container my-5">
+    <h1 class="jumbotron text-center bg-light p-4 rounded shadow-sm">{{ title }}</h1>
 
-    {% if error_message %}
-        <div class="alert alert-danger" role="alert">
-            <strong>Error:</strong> {{ error_message }}
-        </div>
-    {% endif %}
-
-    <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+    <div class="card shadow-lg p-4 mb-4">
         <div class="card-body">
-      
-            <form action="/buscar_costo_tanqueo" method="get">
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm"><i class="bi bi-search me-2"></i> Buscar Costo de Tanqueo</h2>
+            <p>Introduce los criterios de búsqueda para encontrar el costo de tanqueo de un vehículo específico en una ciudad y localidad dadas.</p>
+
+            <form action="/buscar_costo_tanqueo" method="get" class="mb-4">
                 <div class="row g-3">
-                    <div class="col-md-3">
-                        <label for="marca" class="form-label">Marca Vehículo:</label>
-                        <input type="text" class="form-control" id="marca" name="marca" 
-                               placeholder="Ej: Toyota" value="{{ marca_buscada or '' }}">
+                    {# Campos de Marca y Modelo #}
+                    <div class="col-md-6">
+                        <label for="marca" class="form-label">Marca:</label>
+                        <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej: Toyota" value="{{ marca_buscada if marca_buscada else '' }}">
                     </div>
-                    <div class="col-md-3">
-                        <label for="modelo" class="form-label">Modelo Vehículo:</label>
-                        <input type="text" class="form-control" id="modelo" name="modelo" 
-                               placeholder="Ej: Corolla" value="{{ modelo_buscado or '' }}">
+                    <div class="col-md-6">
+                        <label for="modelo" class="form-label">Modelo:</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej: Corolla" value="{{ modelo_buscado if modelo_buscado else '' }}">
                     </div>
-                    <div class="col-md-3">
-                        <label for="ciudad" class="form-label">Ciudad Combustible:</label>
-                        <input type="text" class="form-control" id="ciudad" name="ciudad" 
-                               placeholder="Ej: Bogota" value="{{ ciudad_buscada or '' }}">
+
+                    {# Campos de Ciudad, Localidad y Tipo de Combustible #}
+                    <div class="col-md-6">
+                        <label for="ciudad" class="form-label">Ciudad:</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Ej: Bogotá" value="{{ ciudad_buscada if ciudad_buscada else '' }}">
                     </div>
-                    <div class="col-md-3">
-                        <label for="localidad" class="form-label">Localidad Combustible:</label>
-                        <input type="text" class="form-control" id="localidad" name="localidad" 
-                               placeholder="Ej: Engativa" value="{{ localidad_buscada or '' }}">
+                    <div class="col-md-6">
+                        <label for="localidad" class="form-label">Localidad:</label>
+                        <input type="text" class="form-control" id="localidad" name="localidad" placeholder="Ej: Chapinero" value="{{ localidad_buscada if localidad_buscada else '' }}">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
                         <select class="form-select" id="tipo_combustible" name="tipo_combustible">
-                            <option value="">Cualquiera</option>
-                            {% if Tipo_combustibleEnum %}
-                                {% for fuel_type in Tipo_combustibleEnum %}
-                                    <option value="{{ fuel_type.value }}" 
-                                            {% if tipo_combustible_buscado and tipo_combustible_buscado.value == fuel_type.value %}selected{% endif %}>
-                                        {{ fuel_type.value }}
-                                    </option>
-                                {% endfor %}
-                            {% endif %}
+                            <option value="">-- Seleccionar --</option>
+                            {% for tipo in Tipo_combustibleEnum %}
+                                <option value="{{ tipo.value }}" {% if tipo_combustible_buscado and tipo_combustible_buscado.value == tipo.value %}selected{% endif %}>{{ tipo.value }}</option>
+                            {% endfor %}
                         </select>
                     </div>
-                </div>
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-primary me-2">Buscar</button>
-                    <a href="/buscar_costo_tanqueo" class="btn btn-secondary">Limpiar Búsqueda</a>
+                </div> {# Fin row g-3 #}
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="submit" class="btn btn-primary custom-hover-effect">
+                        <i class="bi bi-calculator me-2"></i> Calcular Costo
+                    </button>
+                    <a href="/buscar_costo_tanqueo" class="btn btn-secondary custom-hover-effect">
+                        <i class="bi bi-x-circle me-2"></i> Limpiar Búsqueda
+                    </a>
                 </div>
             </form>
+
+            {# Sección de resultados y mensajes de error #}
+            {% if error_message %}
+                <div class="alert alert-warning" role="alert">
+                    {{ error_message }}
+                </div>
+            {% endif %}
+
+            {% if resultados %}
+                <h3 class="text-primary mt-5 mb-3"><i class="bi bi-receipt me-2"></i> Resultados de la Búsqueda</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Año</th>
+                                <th>Tipo de Combustible</th>
+                                <th>Tamaño Tanque (Galones)</th>
+                                <th>Ciudad</th>
+                                <th>Localidad</th>
+                                <th>Precio Combustible</th>
+                                <th>Costo Tanqueo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resultado in resultados %}
+                                <tr>
+                                    <td>{{ resultado.marca }}</td>
+                                    <td>{{ resultado.modelo }}</td>
+                                    <td>{{ resultado.año }}</td>
+                                    <td>{{ resultado.tipo_combustible }}</td>
+                                    <td>{{ resultado.tamaño_tanque_galones }}</td>
+                                    <td>{{ resultado.ciudad }}</td>
+                                    <td>{{ resultado.localidad }}</td>
+                                    <td>${{ "%.2f"|format(resultado.precio_combustible) }}</td>
+                                    <td>${{ "%.2f"|format(resultado.costo_tanqueo) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
         </div>
     </div>
-
-    <h2 class="mt-5 mb-3">Resultados</h2>
-
-
-    {% if resultados %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover shadow-sm rounded">
-                <thead class="bg-primary text-white">
-                    <tr>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Año</th>
-                        <th>Tipo Combustible</th>
-                        <th>Tamaño Tanque (gal)</th>
-                        <th>Ciudad Combustible</th>
-                        <th>Localidad Combustible</th>
-                        <th>Precio/Galón</th>
-                        <th>Costo total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in resultados %}
-                    <tr>
-                        <td>{{ item.marca }}</td>
-                        <td>{{ item.modelo }}</td>
-                        <td>{{ item.year }}</td>
-                        <td>{{ item.Tipo_combustible.value }}</td>
-                        <td>{{ item.Tan_size }}</td>
-                        <td>{{ item.ciudad }}</td>
-                        <td>{{ item.localidad }}</td>
-                        <td>${{ "%.3f"|format(item.precio_por_galon) }}</td> {# Formato para precio #}
-                        <td>${{ "%.3f"|format(item.costo_total) }}</td> {# Formato para costo total #}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    
+    {# SECCIÓN DESPLEGABLE DE VEHÍCULOS REGISTRADOS #}
+    <div class="card shadow-lg p-3 mt-4">
+        {# Cambiamos a estilo inline CSS para usar var(--primary-color) directamente #}
+        <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: var(--primary-color);" id="headingVehiculos">
+            <h2 class="mb-0 fs-5">
+                <button class="btn btn-link text-white text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVehiculos" aria-expanded="false" aria-controls="collapseVehiculos">
+                    <i class="bi bi-car-front-fill me-2"></i> Vehículos Registrados
+                </button>
+            </h2>
+            <button class="btn btn-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVehiculos" aria-expanded="false" aria-controls="collapseVehiculos">
+                <i class="bi bi-chevron-down"></i> {# Icono de flecha hacia abajo #}
+            </button>
         </div>
-    {% elif marca_buscada or modelo_buscado or ciudad_buscada or localidad_buscada or tipo_combustible_buscado %}
-
-        <div class="alert alert-info" role="alert">
-            No se encontraron resultados para los criterios de búsqueda especificados.
+        <div id="collapseVehiculos" class="collapse" aria-labelledby="headingVehiculos">
+            <div class="card-body">
+                {% if vehiculos_disponibles %}
+                    <p>Aquí puedes consultar la lista de vehículos actualmente registrados en el sistema:</p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Tipo de Combustible</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vehiculo in vehiculos_disponibles %}
+                                    <tr>
+                                        <td>{{ vehiculo.id }}</td>
+                                        <td>{{ vehiculo.marca }}</td>
+                                        <td>{{ vehiculo.modelo }}</td>
+                                        <td>{{ vehiculo.tipo_combustible }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        No hay vehículos registrados en el sistema.
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    {% else %}
-        <div class="alert alert-info" role="alert">
-            Ingresa criterios de búsqueda para encontrar costos de tanqueo.
-        </div>
-    {% endif %}
+    </div>
+    {# FIN DE LA SECCIÓN DESPLEGABLE DE VEHÍCULOS #}
 
-    <a href="/" class="btn btn-secondary mt-3">Volver al Inicio</a>
+    {# --- SECCIÓN DESPLEGABLE DE COMBUSTIBLES REGISTRADOS --- #}
+    <div class="card shadow-lg p-3 mt-4">
+        {# Cambiamos a estilo inline CSS para usar var(--accent-color) #}
+        <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: var(--accent-color);" id="headingCombustibles">
+            <h2 class="mb-0 fs-5">
+                <button class="btn btn-link text-white text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCombustibles" aria-expanded="false" aria-controls="collapseCombustibles">
+                    <i class="bi bi-fuel-pump-fill me-2"></i> Precios de Combustible Registrados
+                </button>
+            </h2>
+            <button class="btn btn-link text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCombustibles" aria-expanded="false" aria-controls="collapseCombustibles">
+                <i class="bi bi-chevron-down"></i> {# Icono de flecha hacia abajo #}
+            </button>
+        </div>
+        <div id="collapseCombustibles" class="collapse" aria-labelledby="headingCombustibles">
+            <div class="card-body">
+                {% if combustibles_disponibles %}
+                    <p>Aquí puedes consultar los precios de combustible registrados por tipo, ciudad y localidad:</p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo</th>
+                                    <th>Ciudad</th>
+                                    <th>Localidad</th>
+                                    <th>Precio ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for combustible in combustibles_disponibles %}
+                                    <tr>
+                                        <td>{{ combustible.id }}</td>
+                                        <td>{{ combustible.tipo_combustible }}</td>
+                                        <td>{{ combustible.ciudad }}</td>
+                                        <td>{{ combustible.localidad }}</td>
+                                        <td>${{ "%.2f"|format(combustible.precio) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        No hay precios de combustible registrados en el sistema.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {# FIN DE LA SECCIÓN DESPLEGABLE DE COMBUSTIBLES #}
+
+
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-outline-secondary custom-hover-effect">
+            <i class="bi bi-house-door-fill me-2"></i> Volver a Inicio
+        </a>
+    </div>
 </div>
+
 {% endblock %}
