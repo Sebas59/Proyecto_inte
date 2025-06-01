@@ -457,5 +457,19 @@ async def buscar_costo_tanqueo_html(
         }
     )
 
+@router.get("/informacion", tags=["Informacion"])
+async def leer_info(request: Request):
+    return templades.TemplateResponse("informacion.html", {"request": request})
 
+@router.get("/informacion/planeacion", tags=["Informacion"])
+async def leer_info(request: Request):
+    return templades.TemplateResponse("informacion_planeacion.html", {"request": request})
+
+@router.get("/informacion/diseno", tags=["Informacion"])
+async def leer_info(request: Request):
+    return templades.TemplateResponse("informacion_diseno.html", {"request": request})
+
+@router.get("/informacion/desarrollador",tags=["informacion"])
+async def leer_info_desa(request : Request):
+    return templades.TemplateResponse("/informacion_desarrollador.html",{"request" : request})
 
