@@ -5,7 +5,10 @@ from fastapi.requests import Request
 
 import home
 
-app = FastAPI()
+app = FastAPI(
+    title="Gestion de Vehiculos a combustion y Combustibles",
+    description="Aplicacion web para gestionar vehiculos a combustion, combustibles y costos de tanqueo"
+)
 
 app.mount("/statics", StaticFiles(directory="statics"), name="statics")
 

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Conócenos - Desarrollador{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class=class="jumbotron text-center bg-light p-4 rounded shadow-sm">Sobre el Desarrollador</h1>
+    <div class="card shadow-lg p-4 mb-4 text-center">
+        <div class="card-body">
+            <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle mb-3 border border-primary border-3" alt="Foto del Desarrollador">
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm">¡Hola! Soy Juan Sebastian Lopez Urrego</h2>
+            <p class="card-text lead">Soy el creador y desarrollador de esta aplicación de gestión de vehículos a combustion y combustibles fosiles o de gas. Mi pasión por la programación y la eficiencia me llevó a construir esta herramienta.</p>
+            <p class="card-text">Este proyecto es una muestra de mis habilidades en el desarrollo web, utilizando:</p>
+            <ul class="list-unstyled d-inline-block text-start">
+                <li><i class="bi bi-fast-forward-fill text-success me-2"></i> FastAPI: Para un backend rápido y robusto.</li>
+                <li><i class="bi bi-database-fill-check text-info me-2"></i> SQLModel: Para una interacción ORM eficiente con la base de datos.</li>
+                <li><i class="bi bi-code-slash text-warning me-2"></i> Jinja2: Para la renderización dinámica de templates HTML.</li>
+                <li><i class="bi bi-bootstrap-fill text-purple me-2"></i> Bootstrap: Para un diseño frontend moderno y responsivo.</li>
+                <li><i class="bi bi-git text-danger me-2"></i> Control de Versiones (Git): Para una gestión organizada del código.</li>
+            </ul>
+            <p class="card-text mt-3">Mi objetivo es construir soluciones prácticas y fáciles de usar que resuelvan problemas reales. ¡Espero que encuentres esta aplicación útil!</p>
+
+            <div class="mt-4">
+                <p class="text-muted">Puedes contactarme o ver otros proyectos en:</p>
+                <a href="https://github.com/Sebas59" target="_blank" class="btn btn-outline-secondary custom-hover-effect me-2">
+                    <i class="bi bi-github me-2"></i> GitHub
+                </a>
+                <a href="https://linkedin.com/in/sebastian-lopez-a61107360" target="_blank" class="btn btn-primary custom-hover-effect">
+                    <i class="bi bi-linkedin me-2"></i> LinkedIn
+                </a>
+                
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="/informacion" class="btn btn-primary custom-hover-effect mt-3">
+            <i class="bi bi-arrow-left-circle me-2"></i> Volver a Conócenos
+        </a>
+        <a href="/" class="btn btn-secondary custom-hover-effect mt-3">
+            <i class="bi bi-house-door-fill me-2"></i> Volver a Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}

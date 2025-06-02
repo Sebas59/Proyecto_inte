@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field,Relationship
 from typing import Optional
-from sqlalchemy import Enum as SqlEnum,column
+from sqlalchemy import Enum as SqlEnum,column,String
 from datetime import datetime
 from enum import Enum
 

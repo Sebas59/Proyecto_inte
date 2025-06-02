@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Conócenos - Diseño{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="jumbotron text-center bg-light p-4 rounded shadow-sm">Diseño del Proyecto</h1>
+    
+    <div class="card shadow-lg p-4 mb-4">
+        <div class="card-body">
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm"><i class="bi bi-boxes me-2"></i> Diagrama de Clases</h2>
+            <p>El diagrama de clases representa la estructura lógica del sistema, mostrando las clases (modelos de datos y componentes clave del backend/ORM), sus atributos y los métodos, así como las relaciones entre ellos. Esto ayuda a visualizar la organización del código y cómo interactúan las diferentes partes de la aplicación.</p>
+            <div class="text-center my-4">
+                <img src="{{ url_for('statics', path='img/models.png') }}" alt="Diagrama de Clases del Proyecto" class="img-fluid rounded shadow-sm border" style="max-height: 500px; object-fit: contain;">
+                <small class="d-block text-muted mt-2">Representación de la estructura de clases del backend (SQLModel/ORM).</small>
+            </div>
+
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm"><i class="bi bi-geo-alt-fill me-2"></i> Mapa de Endpoints (API)</h2>
+            <p>El siguiente mapa ilustra los principales endpoints de la API, especificando las rutas HTTP  y los recursos que gestionan. Este esquema es fundamental para entender cómo el frontend interactúa con el backend y qué operaciones se pueden realizar.</p>
+            <div class="text-center my-4">
+                <img src="{{ url_for('statics', path='img/mapa_endpoints.png') }}" alt="Mapa de Endpoints de la API" class="img-fluid rounded shadow-sm border" style="max-height: 500px; object-fit: contain;">
+                <small class="d-block text-muted mt-2">Visión general de las rutas y operaciones de la API.</small>
+            </div>
+
+            <h2 class="jumbotron bg-light p-4 rounded shadow-sm"></i> Mockups/Wireframes de Pantallas</h2>
+            <p>Los mockups y wireframes representan el diseño visual y la disposición de los elementos en las principales pantallas de la aplicación. Estos prototipos ayudaron a visualizar la experiencia de usuario antes de la implementación final, asegurando una interfaz clara y funcional.</p>
+            
+            <div class="row my-4 g-4 justify-content-center"> 
+                
+                
+                <div class="col-12 col-md-6 d-flex justify-content-center"> 
+                    <div class="text-center w-100">
+                        <iframe 
+                            style="border: 1px solid rgba(0, 0, 0, 0.1); width: 100%; min-height: 350px; aspect-ratio: 16 / 9;" 
+                            src="https://embed.figma.com/design/pWYgRL9fjOHYO3X0IVf1q1/Proyecto-render?node-id=2-5177&embed-host=share" 
+                            allowfullscreen>
+                        </iframe>
+                        <small class="d-block text-muted mt-2">Mockup: Página de Inicio (interactivo).</small>
+                    </div>
+                </div>
+
+                
+                <div class="col-12 col-md-6 d-flex justify-content-center">
+                    <div class="text-center w-100">
+                        <iframe 
+                            style="border: 1px solid rgba(0, 0, 0, 0.1); width: 100%; min-height: 350px; aspect-ratio: 16 / 9;" 
+                            src="https://embed.figma.com/design/pWYgRL9fjOHYO3X0IVf1q1/Proyecto-render?node-id=2-5211&embed-host=share" 
+                            allowfullscreen>
+                        </iframe>
+                        <small class="d-block text-muted mt-2">Mockup: Lista de Vehículos (interactivo).</small>
+                    </div>
+                </div>
+                        
+                
+                <div class="col-12 col-md-6 d-flex justify-content-center">
+                    <div class="text-center w-100">
+                        <iframe 
+                            style="border: 1px solid rgba(0, 0, 0, 0.1); width: 100%; min-height: 350px; aspect-ratio: 16 / 9;" 
+                            src="https://embed.figma.com/design/pWYgRL9fjOHYO3X0IVf1q1/Proyecto-render?node-id=4-441&embed-host=share" 
+                            allowfullscreen>
+                        </iframe>
+                        <small class="d-block text-muted mt-2">Mockup: Formulario de Registro/Edición (interactivo).</small>
+                    </div>
+                </div>
+
+                
+                <div class="col-12 col-md-6 d-flex justify-content-center">
+                    <div class="text-center w-100">
+                        <iframe 
+                            style="border: 1px solid rgba(0, 0, 0, 0.1); width: 100%; min-height: 350px; aspect-ratio: 16 / 9;" 
+                            src="https://embed.figma.com/design/pWYgRL9fjOHYO3X0IVf1q1/Proyecto-render?node-id=4-519&embed-host=share" 
+                            allowfullscreen>
+                        </iframe>
+                        <small class="d-block text-muted mt-2">Mockup: Página de Historial eliminados(Vehiculos/Combustible) (interactivo).</small>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 d-flex justify-content-center">
+                    <div class="text-center w-100">
+                        <iframe 
+                            style="border: 1px solid rgba(0, 0, 0, 0.1); width: 100%; min-height: 350px; aspect-ratio: 16 / 9;" 
+                            src="https://embed.figma.com/design/pWYgRL9fjOHYO3X0IVf1q1/Proyecto-render?node-id=49-593&embed-host=share" 
+                            allowfullscreen>
+                        </iframe>
+                        <small class="d-block text-muted mt-2">Mockup: Página de Consulta costos de tanqueo (interactivo).</small>
+                    </div>
+                </div>
+
+            </div> 
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="/informacion" class="btn btn-primary custom-hover-effect mt-3">
+            <i class="bi bi-arrow-left-circle me-2"></i> Volver a Conócenos
+        </a>
+        <a href="/" class="btn btn-secondary custom-hover-effect mt-3">
+            <i class="bi bi-house-door-fill me-2"></i> Volver a Inicio
+        </a>
+    </div>
+</div>
+{% endblock %}
