@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="mb-4 text-primary">Registrar Nuevo Vehículo</h1>
 
-    
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
             <strong>Error:</strong> {{ error_message }}
@@ -15,22 +14,20 @@
 
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
         <div class="card-body">
-            
-            <form action="/vehiculos/crear" method="post">
+            <form action="/vehiculos/crear" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="marca" class="form-label">Marca:</label>
-                    <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej: Toyota" required>
+                    <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej: Toyota" value="{{ vehiculo_data.marca or '' }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="modelo" class="form-label">Modelo:</label>
-                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej: Corolla" required>
+                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej: Corolla" value="{{ vehiculo_data.modelo or '' }}" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="year" class="form-label">Año:</label>
-    
-                    <input type="number" class="form-control" id="year" name="year" min="1900" max="2025" placeholder="Ej: 2023" required>
+                    <label for="año" class="form-label">Año:</label>
+                    <input type="number" class="form-control" id="año" name="año" min="1900" max="2025" placeholder="Ej: 2023" value="{{ vehiculo_data.año or '' }}" required>
                 </div>
 
                 <div class="mb-3">
@@ -39,7 +36,9 @@
                         <option value="">Selecciona un tipo de combustible</option>
                         {% if Tipo_combustibleEnum %}
                             {% for fuel_type in Tipo_combustibleEnum %}
-                                <option value="{{ fuel_type.value }}">{{ fuel_type.value }}</option>
+                                <option value="{{ fuel_type.value }}" {% if vehiculo_data.Tipo_combustible and vehiculo_data.Tipo_combustible.value == fuel_type.value %}selected{% endif %}>
+                                    {{ fuel_type.value }}
+                                </option>
                             {% endfor %}
                         {% endif %}
                     </select>
@@ -47,16 +46,22 @@
 
                 <div class="mb-3">
                     <label for="Tan_size" class="form-label">Tamaño del Tanque (galones):</label>
-                    <input type="number" step="0.1" class="form-control" id="Tan_size" name="Tan_size" min="0.1" placeholder="Ej: 15.5" required>
+                    <input type="number" step="0.1" class="form-control" id="Tan_size" name="Tan_size" min="0.1" placeholder="Ej: 15.5" value="{{ vehiculo_data.Tan_size or '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">Imagen del Vehículo (Opcional):</label>
+                    <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                    <small class="form-text text-muted">Sube una imagen de tu vehículo (JPG, PNG, GIF).</small>
                 </div>
 
                 <div class="d-flex justify-content-center gap-3 mt-4"> 
-                <button type="submit" class="btn btn-success custom-hover-effect">
-                    <i class="bi bi-car-front-fill me-2"></i> Registrar Vehículo 
-                </button>
-                <a href="/" class="btn btn-secondary custom-hover-effect">
-                    <i class="bi bi-x-circle-fill me-2"></i> Cancelar 
-                </a>
+                    <button type="submit" class="btn btn-success custom-hover-effect">
+                        <i class="bi bi-car-front-fill me-2"></i> Registrar Vehículo 
+                    </button>
+                    <a href="/vehiculos/" class="btn btn-secondary custom-hover-effect"> <i class="bi bi-x-circle-fill me-2"></i> Cancelar 
+                    </a>
+                </div>
             </form>
         </div>
     </div>
