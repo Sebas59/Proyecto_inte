@@ -1,100 +1,109 @@
-{% extends "base.html" %}
+{% extends 'base.html' %} 
 
-{% block title %}Listado de Combustible{% endblock %}
+{% block title %}Listado de Precios de Combustible{% endblock %} 
 
-{% block content %}
+{% block content %} 
+
 <div class="jumbotron text-center bg-light p-4 rounded shadow-sm">
     <div class="d-flex justify-content-between align-items-center mb-4"> 
         <h1 class="mb-0">Listado de Combustible</h1> 
         <a href="/combustible/historial_eliminados" class="btn btn-secondary custom-hover-effect">
-        <i class="bi bi-archive-fill me-2"></i> Ver Historial Eliminados
-    </a>
+            <i class="bi bi-archive-fill me-2"></i> Ver Historial Eliminados
+        </a>
     </div>
 
-<div class="card mb-4 shadow-sm">
-    <div class="card-header btn-primary">
-        <h5 class="mb-0">
-            <button class="btn btn-link text-white text-decoration-none w-100 text-start d-flex justify-content-between align-items-center" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#collapseFilters" 
-                    aria-expanded="{% if current_ciudad or current_localidad %}true{% else %}false{% endif %}"
-                    aria-controls="collapseFilters">
-                <i class="bi bi-funnel-fill me-2"></i> Filtros de Combustible
-                <i class="bi {% if current_ciudad or current_localidad %}bi-chevron-up{% else %}bi-chevron-down{% endif %} collapse-icon"></i> 
-            </button>
-        </h5>
-    </div>
-    <div id="collapseFilters" class="collapse {% if current_ciudad or current_localidad %}show{% endif %}"> 
-        <div class="card-body">
-            <form action="/combustibles" method="get" class="row g-3 align-items-end">
-                <div class="col-md-4"> 
-                    <label for="ciudad" class="form-label">Ciudad:</label>
-                    <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{ current_ciudad if current_ciudad is not none else '' }}">
-                </div>
-                <div class="col-md-4"> 
-                    <label for="localidad" class="form-label">Localidad:</label>
-                    <input type="text" class="form-control" id="localidad" name="localidad" value="{{ current_localidad if current_localidad is not none else '' }}">
-                </div>
-                
-                <div class="col-md-4 d-flex align-items-end"> 
-                    <button type="submit" class="btn btn-primary custom-hover-effect me-2">
-                        <i class="bi bi-funnel-fill me-2"></i> Aplicar Filtros
-                    </button>
-                    <a href="/combustibles" class="btn btn-outline-secondary"> 
-                        <i class="bi bi-x-circle me-2"></i> Limpiar Filtros 
-                    </a>
-                </div>
-            </form>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header btn-primary">
+            <h5 class="mb-0">
+                <button class="btn btn-link text-white text-decoration-none w-100 text-start d-flex justify-content-between align-items-center" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#collapseFilters" 
+                        aria-expanded="{% if current_ciudad or current_localidad or id_buscado %}true{% else %}false{% endif %}" 
+                        aria-controls="collapseFilters">
+                    <i class="bi bi-funnel-fill me-2"></i> Filtros de Combustible
+                    <i class="bi {% if current_ciudad or current_localidad or id_buscado %}bi-chevron-up{% else %}bi-chevron-down{% endif %} collapse-icon"></i>
+                </button>
+            </h5>
+        </div>
+        <div id="collapseFilters" class="collapse {% if current_ciudad or current_localidad or id_buscado %}show{% endif %}"> 
+            <div class="card-body">
+                <form action="/combustibles" method="get" class="row g-3 align-items-end">
+                    <div class="col-md-4"> 
+                        <label for="ciudad" class="form-label">Ciudad:</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Ej: Bogotá" value="{{ current_ciudad if current_ciudad is not none else '' }}">
+                    </div>
+                    <div class="col-md-4"> 
+                        <label for="localidad" class="form-label">Localidad:</label>
+                        <input type="text" class="form-control" id="localidad" name="localidad" placeholder="Ej: Usaquén" value="{{ current_localidad if current_localidad is not none else '' }}">
+                    </div>
+                    <div class="col-md-4"> 
+                        <label for="combustible_id" class="form-label">ID del Combustible:</label>
+                        <input type="text" class="form-control" id="combustible_id" name="combustible_id" placeholder="Ej: 1" value="{{ id_buscado if id_buscado is not none else '' }}">
+                    </div>
+                    
+                    <div class="col-md-12 d-flex align-items-end"> 
+                        <button type="submit" class="btn btn-success custom-hover-effect me-2">
+                            <i class="bi bi-funnel-fill me-2"></i> Aplicar Filtros
+                        </button>
+                        <a href="/combustibles" class="btn btn-secondary custom-hover-effect me-2">
+                            <i class="bi bi-x-circle-fill me-2"></i> Limpiar Filtros 
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-    {% if precios_combustible %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered align-middle table-sm"> 
-                <thead class="table-dark"> 
-                    <tr>
-                        <th scope="col">#</th> 
-                        <th scope="col">Ciudad</th>
-                        <th scope="col">Localidad</th>
-                        <th scope="col">Tipo de Combustible</th>
-                        <th scope="col">Precio por galones</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for combustible in precios_combustible %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th> 
-                        <td>{{ combustible.ciudad }}</td>
-                        <td>{{ combustible.localidad }}</td>
-                        <td>{{ combustible.tipo_combustible.value }}</td> 
-                        <td>{{combustible.precio_por_galon}}</td> 
-                        <td>
-                            <div class="d-flex"> 
-                                <a href="/combustibles/edit/{{ combustible.id }}" class="btn btn-info btn-sm custom-hover-effect">
-                                    <i class="bi bi-pencil-square me-1"></i> Editar
-                                </a>
-                                <form action="/combustible/eliminar/{{ combustible.id }}" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este combustible?');"
+    {% if error_message %} 
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+    {% elif combustibles %} 
+    <div class="table-responsive"> 
+        <table class="table table-striped table-hover table-bordered align-middle table-sm">
+            <thead class="table-dark"> 
+                <tr>
+                    <th scope="col">ID</th> 
+                    <th scope="col">Ciudad</th>
+                    <th scope="col">Localidad</th>
+                    <th scope="col">Tipo de Combustible</th> 
+                    <th scope="col">Precio por Galón</th> 
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for combustible in combustibles %} 
+                <tr>
+                    <th scope="row">{{ combustible.id }}</th> 
+                    <td>{{ combustible.ciudad }}</td>
+                    <td>{{ combustible.localidad }}</td>
+                    <td>{{ combustible.tipo_combustible.value }}</td> 
+                    <td>${{ "%.3f"|format(combustible.precio_por_galon) }}</td> 
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center"> 
+                            <a href="/combustibles/edit/{{ combustible.id }}" class="btn btn-info btn-sm custom-hover-effect me-2">
+                                <i class="bi bi-pencil-square me-1"></i> Editar
+                            </a>
+                            <form action="/combustibles/eliminar/{{ combustible.id }}" method="post" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este registro de combustible?');"
                                     class="d-inline-block p-0 m-0 border-0 bg-transparent">
-                                    <button type="submit" class="btn btn-danger btn-sm custom-hover-effect">
-                                        <i class="bi bi-trash-fill me-1"></i> Eliminar
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <div class="alert alert-warning" role="alert"> 
-            No hay precios de combustible registrados aún.
+                                <button type="submit" class="btn btn-danger btn-sm custom-hover-effect">
+                                    <i class="bi bi-trash-fill me-1"></i> Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %} 
+        <div class="alert alert-warning" role="alert">
+            No hay precios de combustible registrados que coincidan con los filtros aplicados.
         </div>
     {% endif %}
-        <a href="/" class="btn btn-primary custom-hover-effect">
-            <i class="bi bi-house-door-fill me-2"></i> Volver a Inicio
-        </a>
+    <a href="/" class="btn btn-secondary custom-hover-effect mt-3">
+        <i class="bi bi-house-door-fill me-2"></i> Volver a Inicio
+    </a>
 {% endblock %}
