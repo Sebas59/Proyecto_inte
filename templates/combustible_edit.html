@@ -8,13 +8,14 @@
 
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
-            <strong>Error:</strong> {{ error_message }}
+            <strong>Error:</strong> <span id="serverErrorMessage">{{ error_message }}</span>
         </div>
     {% endif %}
 
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
         <div class="card-body">
-            <form action="/combustibles/edit/{{ combustible.id }}" method="post">
+            {# Add an ID to the form #}
+            <form id="editCombustibleForm" action="/combustibles/edit/{{ combustible.id }}" method="post">
                 <div class="mb-3">
                     <label for="ciudad" class="form-label">Ciudad:</label>
                     <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{ combustible.ciudad }}" placeholder="Ej: Bogota" required>
@@ -40,14 +41,53 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="precio_por_galones" class="form-label">Precio por galones:</label>
+                    <label for="precio_por_galon" class="form-label">Precio por galones:</label>
                     <input type="number" step="0.001" class="form-control" id="precio_por_galon" name="precio_por_galon" value="{{ combustible.precio_por_galon }}" min="0" placeholder="Ej: 15.500">
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-3">Actualizar Combustible</button>
-                <a href="/combustibles" class="btn btn-secondary mt-3 ms-2">Cancelar</a>
+                {# Add an ID to the submit button #}
+                <button type="submit" id="submitUpdateCombustibleButton" class="btn btn-primary mt-3 custom-hover-effect">
+                    <i class="bi bi-arrow-clockwise me-2"></i> Actualizar Combustible
+                </button>
+                <a href="/combustibles" class="btn btn-secondary mt-3 ms-2 custom-hover-effect">
+                    <i class="bi bi-x-circle-fill me-2"></i> Cancelar
+                </a>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    // Get the form and the submit button
+    const form = document.getElementById('editCombustibleForm');
+    const submitButton = document.getElementById('submitUpdateCombustibleButton'); // Changed ID for clarity
+    const serverErrorMessage = document.getElementById('serverErrorMessage'); // Element to check for server-side errors
+
+    // Function to disable the button and show loading state
+    function disableSubmitButton() {
+        submitButton.disabled = true;
+        // Using innerHTML to include Bootstrap spinner
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Actualizando...';
+    }
+
+    // Function to re-enable the button and reset its state
+    function enableSubmitButton() {
+        submitButton.disabled = false;
+        // Restore original icon and text
+        submitButton.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i> Actualizar Combustible';
+    }
+
+    // Add event listener for form submission
+    form.addEventListener('submit', function() {
+        disableSubmitButton();
+    });
+
+    // Re-enable the button if there's a server-side error when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if there's an error message displayed from the server
+        if (serverErrorMessage && serverErrorMessage.textContent.trim() !== '') {
+            enableSubmitButton();
+        }
+    });
+</script>
 {% endblock %}
