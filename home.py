@@ -31,14 +31,20 @@ async def leer_home(request: Request):
 async def vehiculos_list_html(
     request: Request, 
     session : AsyncSession = Depends(get_session),
-    marca : Optional[str] = Query(None, description="Filtrar por marca del vehiculo"),
-    modelo : Optional[str] = Query(None, description="Filtrar por modelo del vehiculo")
+    marca : Optional[str] = Query(None, description="Filtrar por marca del vehiculo(opcional)"),
+    modelo : Optional[str] = Query(None, description="Filtrar por modelo del vehiculo(opcional)"),
+    vehiculo_id : Optional[int] = Query(None, description="Filtrar por ID del vehiculo(opcional)")
     ):
     vehiculos = await obtener_vehiculos_db(
         session=session,
         marca=marca,
         modelo=modelo,
+        vehiculo_id=vehiculo_id
         )
+    error_mensage = None
+    if not vehiculos and (marca or modelo or vehiculo_id):
+        error_mensage = "No se encontraron vehiculos con los criterios de busqueda"
+
     return templades.TemplateResponse(
         "vehiculos.html", 
         {
@@ -47,6 +53,8 @@ async def vehiculos_list_html(
         "Tipo_combustible": Tipo_combustibleEnum,
         "Current_marca" : marca,
         "current_modelo" : modelo,
+        "id_buscado" : vehiculo_id,
+        "error_mensage" : error_mensage
         }
         )
 
@@ -130,7 +138,8 @@ async def editar_vehiculo_html(
             "request":request,
             "title": "Editar Vehículo:{vehiculo.marca} {vehiculo.modelo}",
             "vehiculo": vehiculo,
-            "Tipo_combustibleEnum": Tipo_combustibleEnum
+            "Tipo_combustibleEnum": Tipo_combustibleEnum,
+            "imagen_url": vehiculo.imagen_url
             
         }
         )
@@ -138,25 +147,11 @@ async def editar_vehiculo_html(
 @router.post("/vehiculos/edit/{vehiculo_id}", tags=["Vehículos"])
 async def actualizar_vehiculo(
     vehiculo_id: int,
-    vehiculo_form: VehiculoCreateForm = Depends(),  # Igual que en crear
+    vehiculo_update: VehiculoCreateForm = Depends(),  # Igual que en crear
     session: AsyncSession = Depends(get_session)
 ):
-    imagen_url = None
-    if vehiculo_form.imagen:
-        resultado = await save_file(vehiculo_form.imagen, to_supabase=True)
-        if "url" in resultado:
-            imagen_url = resultado["url"]
-
-    vehiculo_data = VehiculoCreate(
-        marca=vehiculo_form.marca,
-        modelo=vehiculo_form.modelo,
-        year=vehiculo_form.year,
-        Tipo_combustible=vehiculo_form.Tipo_combustible,
-        Tan_size=vehiculo_form.Tan_size,
-        imagen_url=imagen_url,  # Actualiza si hay nueva imagen
-    )
-    await actualizar_vehiculo_db(vehiculo_id, vehiculo_data, session)
-    return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+    vehiculo = await actualizar_vehiculo_db(vehiculo_id, vehiculo_update, session)
+    return RedirectResponse(url="/vehiculos_registro", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get("/vehiculos/historial_eliminados", tags=["Vehiculos historial"])
 async def vehiculos_historial_html(
@@ -252,7 +247,7 @@ async def buscar_costo_tanqueo_html(
             "tipo_combustible_buscado": tipo_combustible,
             "Tipo_combustibleEnum": Tipo_combustibleEnum,
             "vehiculos_disponibles": vehiculos_disponibles, 
-            "combustibles_disponibles": combustibles_disponibles 
+            "combustibles_disponibles": combustibles_disponibles,
         }
     )
 
