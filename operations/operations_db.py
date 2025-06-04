@@ -46,7 +46,7 @@ async def obtener_vehiculos_db(
 
 async def actualizar_vehiculo_db(
         vehiculo_id: int, vehiculo_update:VehiculoUpdateForm, session:AsyncSession
-        ):
+        )->Vehiculo:
     result = await session.execute(select(Vehiculo).where(Vehiculo.id == vehiculo_id))
     vehiculo = result.scalar_one_or_none()
     if vehiculo is None:
@@ -63,7 +63,7 @@ async def actualizar_vehiculo_db(
                 supabase.storage.from_(supabase_bucket_name).remove([path_antiguo])
         else:
             print("Error al subir nueva imagen:", resultado.get("error"))
-    for campo in ["marca", "modelo", "año"]:
+    for campo in ["marca", "modelo", "year", "Tipo_combustible", "Tan_size"]:
         valor = getattr(vehiculo_update, campo)
         if valor is not None:
             setattr(vehiculo, campo, valor)
