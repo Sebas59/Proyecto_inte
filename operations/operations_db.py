@@ -7,6 +7,7 @@ from typing import List, Optional,Dict
 from data.models import *
 from data.schemas import *
 from fastapi import Form,File
+from utils.supabase_client import *
 
 
 async def crear_vehiculo_db(vehiculo_create, session:AsyncSession)->Vehiculo:
@@ -23,7 +24,8 @@ async def crear_vehiculo_db(vehiculo_create, session:AsyncSession)->Vehiculo:
 async def obtener_vehiculos_db(
         session:AsyncSession,
         marca : Optional[str] = None,
-        modelo : Optional[str] = None
+        modelo : Optional[str] = None,
+        vehiculo_id: Optional[int] = None
         )->List[Vehiculo]:
     
     query = select(Vehiculo)
@@ -32,6 +34,9 @@ async def obtener_vehiculos_db(
         condition.append(Vehiculo.marca.ilike(f"%{marca}"))
     if modelo:
         condition.append(Vehiculo.modelo.ilike(f"%{modelo}"))
+    if vehiculo_id:
+        condition.append(Vehiculo.id == vehiculo_id)
+
     if condition:
         query = query.where(and_(*condition))
     
@@ -39,20 +44,37 @@ async def obtener_vehiculos_db(
     vehiculos = result.scalars().all()
     return vehiculos
 
-async def actualizar_vehiculo_db(id:int, vehiculo:VehiculoCreate, session:AsyncSession)->Vehiculo:
-    vehiculo_actualizado = await session.get(Vehiculo, id)
-    if not vehiculo_actualizado:
-        raise HTTPException(status_code=404, detail="Vehiculo no encontrado")
-    for key, value in vehiculo.dict(exclude_unset=True).items():
-        setattr(vehiculo_actualizado, key, value)
-    session.add(vehiculo_actualizado)
-    try:
-        await session.commit()
-        await session.refresh(vehiculo_actualizado)
-        return vehiculo_actualizado
-    except IntegrityError as e:
-        await session.rollback()
-        raise HTTPException(status_code=404, detail="Error al actualizar el vehiculo:")
+async def actualizar_vehiculo_db(
+        vehiculo_id: int, vehiculo_update:VehiculoUpdateForm, session:AsyncSession
+        ):
+    result = await session.execute(select(Vehiculo).where(Vehiculo.id == vehiculo_id))
+    vehiculo = result.scalar_one_or_none()
+    if vehiculo is None:
+        raise HTTPException(status_code=404, detail="Vehículo no encontrado")
+    imagen_actual = vehiculo.imagen_url
+    nueva_imagen_url: Optional[str] = None
+    if vehiculo_update.imagen:
+        resultado = await save_file(vehiculo_update.imagen, to_supabase=True)
+
+        if "url" in resultado:
+            nueva_imagen_url = resultado["url"]
+            if imagen_actual:
+                path_antiguo = get_supabase_path_from_url(imagen_actual, supabase_bucket_name)
+                supabase.storage.from_(supabase_bucket_name).remove([path_antiguo])
+        else:
+            print("Error al subir nueva imagen:", resultado.get("error"))
+    for campo in ["marca", "modelo", "año"]:
+        valor = getattr(vehiculo_update, campo)
+        if valor is not None:
+            setattr(vehiculo, campo, valor)
+    if nueva_imagen_url:
+        vehiculo.imagen_url = nueva_imagen_url
+
+    session.add(vehiculo)
+    await session.commit()
+    await session.refresh(vehiculo)
+    return vehiculo
+    
     
 async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
     vehiculo_a_eliminar = await session.get(Vehiculo, id)
