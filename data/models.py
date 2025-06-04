@@ -46,3 +46,4 @@ class VehiculoHistorico(SQLModel, table=True):
     year: int
     Tipo_combustible: Optional[Tipo_combustibleEnum] = Field(sa_column=column(SqlEnum(Tipo_combustibleEnum)))
     Tan_size: float
+    imagen_url: Optional[str] = Field(default=None)
