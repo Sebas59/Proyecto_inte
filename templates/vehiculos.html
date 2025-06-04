@@ -74,7 +74,7 @@
         <tbody>
             {% for vehiculo in vehiculos %} 
             <tr>
-                <th scope="row">{{ loop.index }}</th> 
+                <th scope="row">{{ vehiculo.id }}</th> 
                 <td>{{ vehiculo.marca }}</td>
                 <td>{{ vehiculo.modelo }}</td>
                 <td>{{ vehiculo.year }}</td>
