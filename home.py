@@ -139,7 +139,7 @@ async def crear_vehiculo(
                 print(f"Error uploading image: {upload_result.get('error', 'Unknown error')}")
 
 
-        return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/vehiculos_registro", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
         error_message = e.detail
         return templades.TemplateResponse(
@@ -158,6 +158,18 @@ async def crear_vehiculo(
 async def vehiculos_registro_exitosa(request: Request):
     return templades.TemplateResponse("vehiculo_registration_success.html", {"request": request, "title": "Registro Exitoso"})
 
+@router.get("/vehiculos_edit", tags=["Vehículos"])
+async def vehiculos_edit_exitosa(request: Request):
+    return templades.TemplateResponse("vehiculo_edit_success.html", {"request": request, "title": "Registro Exitoso"})
+
+@router.get("/vehiculos_restar", tags=["Vehículos"])
+async def vehiculos_restar_exitosa(request: Request):
+    return templades.TemplateResponse("vehiculos_restaurar_success.html", {"request": request, "title": "Registro Exitoso"})
+
+@router.get("/vehiculos_eliminar", tags=["Vehículos"])
+async def vehiculos_eliminar_exitosa(request: Request):
+    return templades.TemplateResponse("vehiculo_delete_success.html", {"request": request, "title": "Registro Exitoso"})
+
 @router.post("/vehiculos/eliminar/{vehiculo_id}", tags=["Vehículos"])
 async def eliminar_vehiculo(
     vehiculo_id : int,
@@ -165,7 +177,7 @@ async def eliminar_vehiculo(
 ):
     try:
         await eliminar_vehiculo_db(vehiculo_id, session)
-        return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/vehiculos_eliminar", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
         print(f"Error al eliminar vehículo: {e.detail}")
         return RedirectResponse(
@@ -206,7 +218,7 @@ async def actualizar_vehiculo(
     session: AsyncSession = Depends(get_session)
 ):
     vehiculo = await actualizar_vehiculo_db(vehiculo_id, vehiculo_update, session)
-    return RedirectResponse(url="/vehiculos_registro", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse(url="/vehiculos_edit", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get("/vehiculos/historial_eliminados", tags=["Vehiculos historial"])
 async def vehiculos_historial_html(
@@ -239,7 +251,7 @@ async def restaurar_vehiculo(
 ):
     try:
         await retaurar_vehiculo_db(historico_id, session)
-        return RedirectResponse(url="/vehiculos",status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/vehiculos_restar",status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
         print(f"Error al restaurar vehiculo:{e.detail}")
         return RedirectResponse(url=f"/vehiculos/historial?error_message:{e.detail}")
@@ -376,6 +388,22 @@ async def combustible_list_html(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+@router.get("/combustibles_registro", tags=["Combustibles"])
+async def combustibles_registro_exitosa(request: Request):
+    return templades.TemplateResponse("combustible_registration_success.html", {"request": request, "title": "Registro Exitoso"})
+
+@router.get("/combustibles_edit", tags=["Combustibles"])
+async def combustibles_edit_exitosa(request: Request):
+    return templades.TemplateResponse("combustible_edit_success.html", {"request": request, "title": "Registro Exitoso"})
+
+@router.get("/combustibles_restar", tags=["Combustibles"])
+async def combustibles_restar_exitosa(request: Request):
+    return templades.TemplateResponse("combustible_restaurar_success.html", {"request": request, "title": "Registro Exitoso"})
+
+@router.get("/combustibles_eliminar", tags=["Combustibles"])
+async def combustibles_eliminar_exitosa(request: Request):
+    return templades.TemplateResponse("combustible_delete_success.html", {"request": request, "title": "Registro Exitoso"})
+
 
 @router.get("/combustible/crear", tags=["Combustibles"])
 async def combustible_create_html(request:Request, session:AsyncSession = Depends(get_session)):
@@ -392,7 +420,7 @@ async def create_vehiculo(
 ):
     try:
         nuevo_combustible = await crear_combustible_precio_db(combustible_data,session)
-        return RedirectResponse(url="/combustibles", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/combustibles_registro", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
          return templades.TemplateResponse(
             "combustible_create.html", 
@@ -424,7 +452,7 @@ async def eliminar_combustible(
 ):
     try:
         await eliminar_combustible_db(combustible_id, session)
-        return RedirectResponse(url="/combustibles", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/combustibles_eliminar", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
         print(f"Error al eliminar combustible: {e.detail}")
         return RedirectResponse(
@@ -466,7 +494,7 @@ async def actualizar_combustible(
 ):
     combustible = await actualizar_precio_combustible_db(combustible_id, combustible_data, session)
     return RedirectResponse(
-        url="/combustibles",
+        url="/combustibles_edit",
         status_code=status.HTTP_303_SEE_OTHER
     )
 
@@ -502,7 +530,7 @@ async def restaurar_combustible(
 ):
     try:
         await restaurar_combustible_db(historico_id, session)
-        return RedirectResponse(url="/combustibles",status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/combustibles_restar",status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException as e:
         print(f"Error al restaurar combustible:{e.detail}")
         return RedirectResponse(url=f"/combustible/historial_eliminados?error_message={e.detail}", status_code=status.HTTP_303_SEE_OTHER)
