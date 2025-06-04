@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="mb-4 text-primary">Editar Vehículo</h1>
+    <h1 class="d-flex justify-content-between align-items-center mb-4">Editar Vehículo</h1>
 
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
@@ -15,7 +15,7 @@
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
         <div class="card-body">
             
-            <form action="/vehiculos/edit/{{ vehiculo.id }}" method="post">
+            <form action="/vehiculos/edit/{{ vehiculo.id }}" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="marca" class="form-label">Marca:</label>
                    
