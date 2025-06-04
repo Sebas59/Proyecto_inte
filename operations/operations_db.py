@@ -229,8 +229,9 @@ async def crear_combustible_precio_db(combustible:CombustibleCreate, session:Asy
 async def obtener_precio_combustible_db(
     session: AsyncSession,
     ciudad: Optional[str] = None, 
-    localidad: Optional[str] = None 
-) -> List[CombustibleRead]: 
+    localidad: Optional[str] = None,
+    combustible_id: Optional[int] = None
+) -> List[Combustible]: 
     query = select(Combustible)
     conditions = []
 
@@ -238,13 +239,24 @@ async def obtener_precio_combustible_db(
         conditions.append(Combustible.ciudad.ilike(f"%{ciudad}%"))
     if localidad:
         conditions.append(Combustible.localidad.ilike(f"%{localidad}%"))
-
+    if combustible_id:
+        conditions.append(Combustible.id == combustible_id)
+    
     if conditions:
         query = query.where(and_(*conditions))
+
 
     result = await session.execute(query)
     precios_combustible = result.scalars().all()
     return precios_combustible
+
+async def obtener_combustible_por_id_db(
+    combustible_id: int, session: AsyncSession
+) -> Optional[Combustible]:
+    result = await session.execute(
+        select(Combustible).where(Combustible.id == combustible_id)
+    )
+    return result.scalars().first()
 
 async def actualizar_precio_combustible_db(id:int, combustible:CombustibleCreate, session:AsyncSession)->Combustible:
     nuevo_precio = await session.get(Combustible, id)
