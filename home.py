@@ -29,33 +29,69 @@ async def leer_home(request: Request):
 
 @router.get("/vehiculos", tags=["Vehículos"])
 async def vehiculos_list_html(
-    request: Request, 
+    request: Request,
     session : AsyncSession = Depends(get_session),
     marca : Optional[str] = Query(None, description="Filtrar por marca del vehiculo(opcional)"),
     modelo : Optional[str] = Query(None, description="Filtrar por modelo del vehiculo(opcional)"),
-    vehiculo_id : Optional[int] = Query(None, description="Filtrar por ID del vehiculo(opcional)")
+    # Cambiado a str para manejar vacíos fácilmente y luego convertir
+    vehiculo_id : Optional[str] = Query(None, description="Filtrar por ID del vehiculo(opcional)")
     ):
-    vehiculos = await obtener_vehiculos_db(
-        session=session,
-        marca=marca,
-        modelo=modelo,
-        vehiculo_id=vehiculo_id
-        )
-    error_mensage = None
-    if not vehiculos and (marca or modelo or vehiculo_id):
-        error_mensage = "No se encontraron vehiculos con los criterios de busqueda"
+    # Convertir cadenas vacías a None y vehiculo_id a int si no es None y no vacío
+    current_marca = marca if marca else None
+    current_modelo = modelo if modelo else None
+    # Asegúrate de que vehiculo_id sea un número antes de intentar convertirlo
+    current_vehiculo_id = int(vehiculo_id) if vehiculo_id and vehiculo_id.isdigit() else None
 
-    return templades.TemplateResponse(
-        "vehiculos.html", 
-        {
-        "request": request,
-        "vehiculos": vehiculos, 
-        "Tipo_combustible": Tipo_combustibleEnum,
-        "Current_marca" : marca,
-        "current_modelo" : modelo,
-        "id_buscado" : vehiculo_id,
-        "error_mensage" : error_mensage
-        }
+    try:
+        vehiculos = await obtener_vehiculos_db(
+            session=session,
+            marca=current_marca,
+            modelo=current_modelo,
+            vehiculo_id=current_vehiculo_id
+        )
+        error_message = None
+        if not vehiculos and (current_marca or current_modelo or current_vehiculo_id):
+            error_message = "No se encontraron vehículos con los criterios de búsqueda"
+
+        return templades.TemplateResponse(
+            "vehiculos.html",
+            {
+                "request": request,
+                "vehiculos": vehiculos,
+                "Tipo_combustible": Tipo_combustibleEnum,
+                "Current_marca" : current_marca,
+                "current_modelo" : current_modelo,
+                "id_buscado" : current_vehiculo_id,
+                "error_mensage" : error_message
+            }
+        )
+    except HTTPException as e:
+        return templades.TemplateResponse(
+            "vehiculos.html",
+            {
+                "request": request,
+                "vehiculos": [],
+                "Tipo_combustible": Tipo_combustibleEnum,
+                "Current_marca" : current_marca,
+                "current_modelo" : current_modelo,
+                "id_buscado" : current_vehiculo_id,
+                "error_mensage" : e.detail
+            },
+            status_code=e.status_code
+        )
+    except Exception as e:
+        return templades.TemplateResponse(
+            "vehiculos.html",
+            {
+                "request": request,
+                "vehiculos": [],
+                "Tipo_combustible": Tipo_combustibleEnum,
+                "Current_marca" : current_marca,
+                "current_modelo" : current_modelo,
+                "id_buscado" : current_vehiculo_id,
+                "error_mensage" : f"Error inesperado: {e}"
+            },
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 @router.get("/vehiculos/crear", tags=["Vehículos"])
