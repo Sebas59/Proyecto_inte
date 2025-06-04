@@ -85,34 +85,33 @@
 </div>
 
 <script>
-    // Get the form and the submit button
+    
     const form = document.getElementById('editVehicleForm');
-    const submitButton = document.getElementById('submitUpdateButton'); // Changed ID for clarity
-    const serverErrorMessage = document.getElementById('serverErrorMessage'); // Element to check for server-side errors
+    const submitButton = document.getElementById('submitUpdateButton'); 
+    const serverErrorMessage = document.getElementById('serverErrorMessage'); 
 
-    // Function to disable the button and show loading state
+    
     function disableSubmitButton() {
         submitButton.disabled = true;
-        // Using innerHTML to include Bootstrap spinner
+        
         submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Actualizando...';
     }
 
-    // Function to re-enable the button and reset its state
+    
     function enableSubmitButton() {
         submitButton.disabled = false;
-        // Restore original icon and text
+        
         submitButton.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i> Actualizar Vehículo';
     }
 
-    // Add event listener for form submission
+    
     form.addEventListener('submit', function() {
         disableSubmitButton();
     });
 
-    // Re-enable the button if there's a server-side error when the page loads
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Check if there's an error message displayed from the server
-        // The serverErrorMessage span is within the alert-danger div
+        
         if (serverErrorMessage && serverErrorMessage.textContent.trim() !== '') {
             enableSubmitButton();
         }
