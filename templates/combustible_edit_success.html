@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Registro Exitoso - Mi App de Vehículos y Combustibles{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">¡Combustible Actualizado Exitosamente!</h4>
+        <p>Tu combustible ha sido Actulizado en la base de datos.</p>
+        <hr>
+        
+    </div>
+    <a href="/combustibles" class="btn btn-primary  custom-hover-effect mt-3"><i class="bi bi-card-list me-2"> Ver Todos los Combustibles</i></a>
+    <a href="/" class="btn btn-secondary custom-hover-effect mt-3"><i class="bi bi-house-door-fill me-2"> Ir al Inicio</i></a>
+</div>
+{% endblock %}
