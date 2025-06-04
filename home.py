@@ -102,36 +102,56 @@ async def vehiculo_create_html(request:Request, session:AsyncSession = Depends(g
     })
 
 @router.post("/vehiculos/crear", tags=["Vehículos"]) 
-async def create_vehiculo(
-    vehiculo_form: VehiculoCreateForm=Depends(),
-    session: AsyncSession=Depends(get_session)
+async def crear_vehiculo(
+    request: Request,
+    session: AsyncSession = Depends(get_session),
+    marca: str = Form(...),
+    modelo: str = Form(...),
+    year: int = Form(...),
+    Tipo_combustible: Tipo_combustibleEnum = Form(...),
+    Tan_size: float = Form(...),
+    imagen: UploadFile = File(None) 
 ):
-    
-    print(f"¿Se recibió una imagen? {vehiculo_form.imagen is not None}")
-    print(f"Tipo de contenido: {getattr(vehiculo_form.imagen, 'content_type', 'sin tipo')}")
-    print(f"Nombre de archivo: {getattr(vehiculo_form.imagen, 'filename', 'sin nombre')}")
+    try:
+        vehiculo_data = VehiculoCreate(
+            marca=marca,
+            modelo=modelo,
+            year=year,
+            Tipo_combustible=Tipo_combustible,
+            Tan_size=Tan_size
+        )
+        
+        
+        nuevo_vehiculo = await crear_vehiculo_db(vehiculo_data, session)
+
+       
+        if imagen and imagen.filename:
+            
+            upload_result = await save_file(imagen, to_supabase=True) 
+
+            if "url" in upload_result:
+                
+                nuevo_vehiculo.imagen_url = upload_result["url"]
+                session.add(nuevo_vehiculo) 
+                await session.commit() 
+                await session.refresh(nuevo_vehiculo) 
+            else:
+                print(f"Error uploading image: {upload_result.get('error', 'Unknown error')}")
 
 
-    imagen_url = None
-
-    if vehiculo_form.imagen:
-        resultado = await save_file(vehiculo_form.imagen, to_supabase=True)
-
-        if "url" in resultado:
-            imagen_url = resultado["url"]
-        else:
-            print("Error al subir imagen:", resultado.get("error"))
-
-    vehiculo_create = VehiculoCreate(
-        marca=vehiculo_form.marca,
-        modelo=vehiculo_form.modelo,
-        year=vehiculo_form.year,
-        Tipo_combustible=vehiculo_form.Tipo_combustible,
-        Tan_size=vehiculo_form.Tan_size,
-        imagen_url=imagen_url,
-    )
-    await crear_vehiculo_db(vehiculo_create, session)
-    return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException as e:
+        error_message = e.detail
+        return templades.TemplateResponse(
+            "crear_vehiculo.html",
+            {"request": request, "error_message": error_message, "form_data": await request.form(), "Tipo_combustibleEnum": Tipo_combustibleEnum} # Pass Tipo_combustibleEnum back
+        )
+    except Exception as e:
+        error_message = f"Error inesperado: {e}"
+        return templades.TemplateResponse(
+            "crear_vehiculo.html",
+            {"request": request, "error_message": error_message, "form_data": await request.form(), "Tipo_combustibleEnum": Tipo_combustibleEnum} # Pass Tipo_combustibleEnum back
+        )
 
 
 @router.get("/vehiculos_registro", tags=["Vehículos"])
