@@ -72,7 +72,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for vehiculo in vehiculos %} 
+            {% for vehiculo in vehiculos  | sort(attribute='id') %} 
             <tr>
                 <th scope="row">{{ vehiculo.id }}</th> 
                 <td>{{ vehiculo.marca }}</td>
