@@ -6,17 +6,16 @@
 <div class="container mt-5">
     <h1 class="d-flex justify-content-between align-items-center mb-4">Registrar Nuevo Vehículo</h1>
 
-
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
-            <strong>Error:</strong> {{ error_message }}
+            <strong>Error:</strong> <span id="serverErrorMessage">{{ error_message }}</span>
         </div>
     {% endif %}
 
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
         <div class="card-body">
 
-            <form action="/vehiculos/crear" method="post" enctype="multipart/form-data"> {# <--- ¡IMPORTANTE: Añadir este atributo! #}
+            <form id="createVehicleForm" action="/vehiculos/crear" method="post" enctype="multipart/form-data"> 
                 <div class="mb-3">
                     <label for="marca" class="form-label">Marca:</label>
                     <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej: Toyota" required>
@@ -49,14 +48,14 @@
                     <input type="number" step="0.1" class="form-control" id="Tan_size" name="Tan_size" min="0.1" placeholder="Ej: 15.5" required>
                 </div>
 
-                <div class="mb-3"> {# Nuevo campo para la imagen #}
+                <div class="mb-3"> 
                     <label for="imagen" class="form-label">Imagen del Vehículo (Opcional)</label>
                     <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
                     <div id="imagenHelp" class="form-text">Sube una imagen para el vehículo (formatos de imagen como .jpg, .png, .gif).</div>
                 </div>
 
                 <div class="d-flex justify-content-center gap-3 mt-4">
-                    <button type="submit" class="btn btn-success custom-hover-effect">
+                    <button type="submit" id="submitVehicleButton" class="btn btn-success custom-hover-effect">
                         <i class="bi bi-car-front-fill me-2"></i> Registrar Vehículo
                     </button>
                     <a href="/" class="btn btn-secondary custom-hover-effect">
@@ -64,7 +63,40 @@
                     </a>
                 </div>
             </form>
+            
         </div>
     </div>
 </div>
+
+<script>
+
+    const form = document.getElementById('createVehicleForm');
+    const submitButton = document.getElementById('submitVehicleButton');
+    const serverErrorMessage = document.getElementById('serverErrorMessage'); 
+
+   
+    function disableSubmitButton() {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando...';
+    }
+
+    
+    function enableSubmitButton() {
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="bi bi-car-front-fill me-2"></i> Registrar Vehículo';
+    }
+
+    
+    form.addEventListener('submit', function() {
+        disableSubmitButton();
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        if (serverErrorMessage && serverErrorMessage.textContent.trim() !== '') {
+            enableSubmitButton();
+        }
+    });
+</script>
 {% endblock %}
