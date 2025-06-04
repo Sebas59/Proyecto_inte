@@ -32,11 +32,15 @@
             <form action="/vehiculos" method="get" class="row g-3 align-items-end">
                 <div class="col-md-4"> 
                     <label for="marca" class="form-label">Marca:</label>
-                    <input type="text" class="form-control" id="marca" name="marca" value="{{ current_marca if current_marca is not none else '' }}">
+                    <input type="text" class="form-control" id="marca" name="marca" placeholder="Ej : Toyota" value="{{ current_marca if current_marca is not none else '' }}">
                 </div>
                 <div class="col-md-4"> 
                     <label for="modelo" class="form-label">Modelo:</label>
-                    <input type="text" class="form-control" id="modelo" name="modelo" value="{{ current_modelo if current_modelo is not none else '' }}">
+                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ej: Corolla" value="{{ current_modelo if current_modelo is not none else '' }}">
+                </div>
+                <div class="col-md-4"> 
+                    <label for="vehiculo_id" class="form-label">ID del vehiculo:</label>
+                    <input type="text" class="form-control" id="vehiculo_id" name="vehiculo_id" placeholder="Ej: 1" value="{{ id_buscado if id_buscado is not none else '' }}">
                 </div>
                 
                 <div class="col-md-4 d-flex align-items-end"> 
