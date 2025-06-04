@@ -386,12 +386,23 @@ async def obtener_vehiculos_con_costo_combustible_db(
             query_combustible = query_combustible.where(and_(*conditions_combustible))
 
         result_combustible = await session.execute(query_combustible)
-        combustible = result_combustible.scalars().one_or_none() 
+        combustible_encontrado = result_combustible.scalars().all() 
 
-        if combustible:
-
-            if vehiculo.Tan_size is not None and combustible.precio_por_galon is not None:
-                costo_total = round(vehiculo.Tan_size * combustible.precio_por_galon, 3)
+        if combustible_encontrado:
+            
+            total_precio = sum(c.precio_por_galon for c in combustible_encontrado)
+            promedio_precio = total_precio / len(combustible_encontrado)
+            
+           
+            combustible_info = combustible_encontrado[0]
+            if ciudad and localidad:
+                for c in combustible_encontrado:
+                    if c.ciudad.lower() == ciudad.lower() and c.localidad.lower() == localidad.lower():
+                        combustible_info = c
+                        break
+            
+            if vehiculo.Tan_size is not None and promedio_precio is not None:
+                costo_total = round(vehiculo.Tan_size * promedio_precio, 3)
             else:
                 costo_total = None 
             
@@ -402,19 +413,17 @@ async def obtener_vehiculos_con_costo_combustible_db(
                     year=vehiculo.year,
                     Tipo_combustible=vehiculo.Tipo_combustible,
                     Tan_size=vehiculo.Tan_size,
-                    precio_por_galon=combustible.precio_por_galon,
-                    ciudad=combustible.ciudad,
-                    localidad=combustible.localidad,
+                    precio_por_galon=promedio_precio,  
+                    ciudad=combustible_info.ciudad,
+                    localidad=combustible_info.localidad,
                     costo_total=costo_total
                 )
             )
     
-  
     if not resultado:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No se encontraron vehículos o precios de combustible que coincidan con los criterios proporcionados."
         )
-        pass 
-    
+        
     return resultado
