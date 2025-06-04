@@ -6,26 +6,11 @@ from fastapi import HTTPException, status
 from typing import List, Optional,Dict
 from data.models import *
 from data.schemas import *
-from fastapi import Form
+from fastapi import Form,File
 
-def vehiculo_create_form(
-    marca: str = Form(...),
-    modelo: Optional[str] = Form(...),
-    year: Optional[int] = Form(...),
-    Tipo_combustible: Optional[Tipo_combustibleEnum] = Form(None),
-    Tan_size: Optional[float] = Form(0.0)
-    
-) -> VehiculoCreate:
-    return VehiculoCreate(
-        marca=marca,
-        modelo=modelo,
-        year=year,
-        Tipo_combustible=Tipo_combustible,
-        Tan_size=Tan_size
-    )
 
-async def crear_vehiculo_db(vehiculo:VehiculoCreate, session:AsyncSession)->Vehiculo:
-    nuevo_vehiculo = Vehiculo(**vehiculo.dict())
+async def crear_vehiculo_db(vehiculo_create, session:AsyncSession)->Vehiculo:
+    nuevo_vehiculo = Vehiculo(**vehiculo_create.dict())
     session.add(nuevo_vehiculo)
     try:
         await session.commit()
