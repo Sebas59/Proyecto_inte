@@ -6,7 +6,6 @@
   <img src="https://img.shields.io/badge/FastAPI-0.110.0-teal?logo=fastapi" alt="Versión de FastAPI"/>
   <img src="https://img.shields.io/badge/PostgreSQL-15-blue?logo=postgresql" alt="Versión de PostgreSQL"/>
   <img src="https://img.shields.io/badge/Supabase-Storage-green?logo=supabase" alt="Almacenamiento Supabase"/>
-  <img src="https://img.shields.io/badge/Licencia-MIT-green" alt="Licencia MIT"/>
 </p>
 
 ---
