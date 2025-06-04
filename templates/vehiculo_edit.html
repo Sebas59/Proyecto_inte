@@ -51,8 +51,28 @@
                     <input type="number" step="0.1" class="form-control" id="Tan_size" name="Tan_size" value="{{ vehiculo.Tan_size }}" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-3">Actualizar Vehículo</button>
-                <a href="/vehiculos" class="btn btn-secondary mt-3 ms-2">Cancelar</a>
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">Imagen del Vehículo (Opcional)</label>
+                    {% if vehiculo.imagen_url %}
+                        <div class="mb-3">
+                            <p>Imagen actual:</p>
+                            <img src="{{ vehiculo.imagen_url }}" class="img-thumbnail" alt="Imagen actual del vehículo" style="max-width: 200px;">
+                            <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" id="eliminar_imagen_actual" name="eliminar_imagen_actual" value="True">
+                                    <label class="form-check-label" for="eliminar_imagen_actual">
+                                        Eliminar imagen actual
+                                    </label>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p>No hay imagen actual.</p>
+                    {% endif %}
+                    <input class="form-control" type="file" id="imagen" name="imagen" accept="image/*">
+                        <small class="form-text text-muted">Sube una nueva imagen para reemplazar la actual (si existe), o selecciona la opción 'Eliminar imagen actual' para removerla sin subir una nueva.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary custom-hover-effect">Actualizar Vehículo</button>
+                <a href="/vehiculos" class="btn btn-secondary custom-hover-effect">Cancelar</a>
             </form>
         </div>
     </div>
