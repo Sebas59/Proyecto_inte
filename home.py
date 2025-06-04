@@ -33,13 +33,12 @@ async def vehiculos_list_html(
     session : AsyncSession = Depends(get_session),
     marca : Optional[str] = Query(None, description="Filtrar por marca del vehiculo(opcional)"),
     modelo : Optional[str] = Query(None, description="Filtrar por modelo del vehiculo(opcional)"),
-    # Cambiado a str para manejar vacíos fácilmente y luego convertir
     vehiculo_id : Optional[str] = Query(None, description="Filtrar por ID del vehiculo(opcional)")
     ):
-    # Convertir cadenas vacías a None y vehiculo_id a int si no es None y no vacío
+    
     current_marca = marca if marca else None
     current_modelo = modelo if modelo else None
-    # Asegúrate de que vehiculo_id sea un número antes de intentar convertirlo
+   
     current_vehiculo_id = int(vehiculo_id) if vehiculo_id and vehiculo_id.isdigit() else None
 
     try:
@@ -183,7 +182,7 @@ async def editar_vehiculo_html(
 @router.post("/vehiculos/edit/{vehiculo_id}", tags=["Vehículos"])
 async def actualizar_vehiculo(
     vehiculo_id: int,
-    vehiculo_update: VehiculoCreateForm = Depends(),  # Igual que en crear
+    vehiculo_update: VehiculoCreateForm = Depends(),  
     session: AsyncSession = Depends(get_session)
 ):
     vehiculo = await actualizar_vehiculo_db(vehiculo_id, vehiculo_update, session)
@@ -294,7 +293,7 @@ async def combustible_list_html(
     session: AsyncSession = Depends(get_session),
     ciudad: Optional[str] = Query(None, description="Filtrar por ciudad (opcional)"),
     localidad: Optional[str] = Query(None, description="Filtrar por localidad (opcional)"),
-    combustible_id: Optional[str] = Query(None, description="Filtrar por ID (opcional)") # Nuevo Query param
+    combustible_id: Optional[str] = Query(None, description="Filtrar por ID (opcional)")
 ):
     current_ciudad = ciudad if ciudad else None
     current_localidad = localidad if localidad else None
@@ -307,7 +306,7 @@ async def combustible_list_html(
             session=session,
             ciudad=current_ciudad,
             localidad=current_localidad,
-            combustible_id=current_combustible_id # Pasa el nuevo parámetro
+            combustible_id=current_combustible_id 
         )
 
         if not combustibles:
@@ -322,9 +321,9 @@ async def combustible_list_html(
                 "request": request,
                 "combustibles": combustibles,
                 "Tipo_combustibleEnum": Tipo_combustibleEnum,
-                "current_ciudad": current_ciudad, # Pasa los filtros actuales a la plantilla
+                "current_ciudad": current_ciudad, 
                 "current_localidad": current_localidad,
-                "current_combustible_id": current_combustible_id, # Pasa el ID actual a la plantilla
+                "current_combustible_id": current_combustible_id, 
                 "error_message": error_message
             }
         )
