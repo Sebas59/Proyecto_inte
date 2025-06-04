@@ -54,6 +54,24 @@ class VehiculoCreateForm:
         self.Tan_size = Tan_size
         self.imagen = imagen
 
+class VehiculoUpdateForm:
+    def __init__(
+        self,
+        marca: str = Form(...),
+        modelo: str = Form(...),
+        year: int = Form(...),
+        Tipo_combustible: Tipo_combustibleEnum = Form(...),
+        Tan_size: float = Form(...),
+        imagen: Optional[UploadFile] = File(None),
+        eliminar_imagen_actual : Optional[bool] = Form(False)
+    ):
+        self.marca = marca
+        self.modelo = modelo
+        self.year = year
+        self.Tipo_combustible = Tipo_combustible
+        self.Tan_size = Tan_size
+        self.imagen = imagen
+        self.eliminar_imagen_actual = eliminar_imagen_actual
 
 class CombustibleCreate(SQLModel):
     ciudad: str
