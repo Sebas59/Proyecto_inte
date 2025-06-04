@@ -73,7 +73,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for combustible in combustibles %} 
+                {% for combustible in combustibles | sort(attribute='id') %} 
                 <tr>
                     <th scope="row">{{ combustible.id }}</th> 
                     <td>{{ combustible.ciudad }}</td>
