@@ -4,10 +4,10 @@
 
 {% block content %}
 <div class="container my-5">
-    <h1 class=class="jumbotron text-center bg-light p-4 rounded shadow-sm">Sobre el Desarrollador</h1>
+    <h1 class="jumbotron text-center bg-light p-4 rounded shadow-sm">Sobre el Desarrollador</h1>
     <div class="card shadow-lg p-4 mb-4 text-center">
         <div class="card-body">
-            <img src="https://via.placeholder.com/150" class="img-fluid rounded-circle mb-3 border border-primary border-3" alt="Foto del Desarrollador">
+            <img src="{{ url_for('statics', path='img/perfil.jpeg') }}"  class="img-fluid rounded-rectangule mb-3 border border-btn-primary border-3" alt="Foto del Desarrollador" style="max-width: 150px; height: auto;">
             <h2 class="jumbotron bg-light p-4 rounded shadow-sm">¡Hola! Soy Juan Sebastian Lopez Urrego</h2>
             <p class="card-text lead">Soy el creador y desarrollador de esta aplicación de gestión de vehículos a combustion y combustibles fosiles o de gas. Mi pasión por la programación y la eficiencia me llevó a construir esta herramienta.</p>
             <p class="card-text">Este proyecto es una muestra de mis habilidades en el desarrollo web, utilizando:</p>
