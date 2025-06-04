@@ -8,14 +8,15 @@
 
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
-            <strong>Error:</strong> {{ error_message }}
+            <strong>Error:</strong> <span id="serverErrorMessage">{{ error_message }}</span>
         </div>
     {% endif %}
 
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
         <div class="card-body">
             
-            <form action="/vehiculos/edit/{{ vehiculo.id }}" method="post" enctype="multipart/form-data">
+            {# Add an ID to the form #}
+            <form id="editVehicleForm" action="/vehiculos/edit/{{ vehiculo.id }}" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="marca" class="form-label">Marca:</label>
                    
@@ -71,10 +72,50 @@
                         <small class="form-text text-muted">Sube una nueva imagen para reemplazar la actual (si existe), o selecciona la opción 'Eliminar imagen actual' para removerla sin subir una nueva.</small>
                 </div>
 
-                <button type="submit" class="btn btn-primary custom-hover-effect">Actualizar Vehículo</button>
-                <a href="/vehiculos" class="btn btn-secondary custom-hover-effect">Cancelar</a>
+                {# Add an ID to the submit button #}
+                <button type="submit" id="submitUpdateButton" class="btn btn-primary custom-hover-effect">
+                    <i class="bi bi-arrow-clockwise me-2"></i> Actualizar Vehículo
+                </button>
+                <a href="/vehiculos" class="btn btn-secondary custom-hover-effect">
+                    <i class="bi bi-x-circle-fill me-2"></i> Cancelar
+                </a>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    // Get the form and the submit button
+    const form = document.getElementById('editVehicleForm');
+    const submitButton = document.getElementById('submitUpdateButton'); // Changed ID for clarity
+    const serverErrorMessage = document.getElementById('serverErrorMessage'); // Element to check for server-side errors
+
+    // Function to disable the button and show loading state
+    function disableSubmitButton() {
+        submitButton.disabled = true;
+        // Using innerHTML to include Bootstrap spinner
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Actualizando...';
+    }
+
+    // Function to re-enable the button and reset its state
+    function enableSubmitButton() {
+        submitButton.disabled = false;
+        // Restore original icon and text
+        submitButton.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i> Actualizar Vehículo';
+    }
+
+    // Add event listener for form submission
+    form.addEventListener('submit', function() {
+        disableSubmitButton();
+    });
+
+    // Re-enable the button if there's a server-side error when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if there's an error message displayed from the server
+        // The serverErrorMessage span is within the alert-danger div
+        if (serverErrorMessage && serverErrorMessage.textContent.trim() !== '') {
+            enableSubmitButton();
+        }
+    });
+</script>
 {% endblock %}
