@@ -86,7 +86,8 @@ async def eliminar_vehiculo_db(id:int, session:AsyncSession)->Vehiculo:
         modelo=vehiculo_a_eliminar.modelo,
         year=vehiculo_a_eliminar.year,
         Tipo_combustible=vehiculo_a_eliminar.Tipo_combustible,
-        Tan_size=vehiculo_a_eliminar.Tan_size
+        Tan_size=vehiculo_a_eliminar.Tan_size,
+        imagen_url=vehiculo_a_eliminar.imagen_url
     )
     session.add(historico)
     await session.delete(vehiculo_a_eliminar)
@@ -107,6 +108,7 @@ async def retaurar_vehiculo_db(historico_id:int, session:AsyncSession):
         "year" : vehiculo_hist.year,
         "Tipo_combustible" : vehiculo_hist.Tipo_combustible,
         "Tan_size" : vehiculo_hist.Tan_size,
+        "imagen_url" : vehiculo_hist.imagen_url
     }
     nuevo_vehiculo = Vehiculo(**vehiculo_data)
     session.add(nuevo_vehiculo)
