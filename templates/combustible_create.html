@@ -6,17 +6,16 @@
 <div class="container mt-5">
     <h1 class="mb-4 text-primary">Registrar Nuevo Combustible</h1>
 
-    
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
-            <strong>Error:</strong> {{ error_message }}
+            <strong>Error:</strong> <span id="serverErrorMessage">{{ error_message }}</span>
         </div>
     {% endif %}
 
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
         <div class="card-body">
             
-            <form action="/combustible/crear" method="post">
+            <form id="createCombustibleForm" action="/combustible/crear" method="post">
                 <div class="mb-3">
                     <label for="ciudad" class="form-label">Ciudad:</label>
                     <input type="text" class="form-control" id="ciudad" name="ciudad" placeholder="Ej: Bogota" required>
@@ -31,7 +30,7 @@
                     <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
                     <select class="form-select" id="tipo_combustible" name="tipo_combustible" required>
                         <option value="">Selecciona un tipo de combustible</option>
-                        {% if tipo_combustibleEnum %}
+                        {% if tipo_combustibleEnum %} {# Note the case change here to match your context, assuming 'tipo_combustibleEnum' #}
                             {% for fuel_type in tipo_combustibleEnum %}
                                 <option value="{{ fuel_type.value }}">{{ fuel_type.value }}</option>
                             {% endfor %}
@@ -45,14 +44,47 @@
                 </div>
 
                 <div class="d-flex justify-content-center gap-3 mt-4"> 
-                <button type="submit" class="btn btn-success custom-hover-effect">
-                    <i class="bi bi-fuel-pump-fill me-2"></i> Registrar Combustible
-                </button>
-                <a href="/" class="btn btn-secondary custom-hover-effect">
-                    <i class="bi bi-x-circle-fill me-2"></i> Cancelar 
-                </a>
+                    <button type="submit" id="submitCombustibleButton" class="btn btn-success custom-hover-effect">
+                        <i class="bi bi-fuel-pump-fill me-2"></i> Registrar Combustible
+                    </button>
+                    <a href="/" class="btn btn-secondary custom-hover-effect">
+                        <i class="bi bi-x-circle-fill me-2"></i> Cancelar 
+                    </a>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    
+    const form = document.getElementById('createCombustibleForm');
+    const submitButton = document.getElementById('submitCombustibleButton');
+    const serverErrorMessage = document.getElementById('serverErrorMessage'); // Element to check for server-side errors
+
+    
+    function disableSubmitButton() {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando...';
+    }
+
+    
+    function enableSubmitButton() {
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="bi bi-fuel-pump-fill me-2"></i> Registrar Combustible';
+    }
+
+    
+    form.addEventListener('submit', function() {
+        disableSubmitButton();
+    });
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        r
+        if (serverErrorMessage && serverErrorMessage.textContent.trim() !== '') {
+            enableSubmitButton();
+        }
+    });
+</script>
 {% endblock %}
