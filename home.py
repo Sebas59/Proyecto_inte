@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Form, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Form, Query,UploadFile,File
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +12,8 @@ from utils.connection_db import *
 from data.schemas import *
 from operations.operations_db import *
 
-
+from utils.supabase_client import *
+import aiofiles
 
 @asynccontextmanager
 async def lifespan(app: APIRouter):
@@ -59,35 +60,36 @@ async def vehiculo_create_html(request:Request, session:AsyncSession = Depends(g
 
 @router.post("/vehiculos/crear", tags=["Vehículos"]) 
 async def create_vehiculo(
-    vehiculo_data: VehiculoCreate = Depends(vehiculo_create_form), 
-    session: AsyncSession = Depends(get_session)
+    vehiculo_form: VehiculoCreateForm=Depends(),
+    session: AsyncSession=Depends(get_session)
 ):
-    try:
-        nuevo_vehiculo = await crear_vehiculo_db(vehiculo_data,session)
-        return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
-    except HTTPException as e:
-         return templades.TemplateResponse(
-            "vehiculo_create.html", 
-            {
-                "request": Request(scope={"type": "http"}), 
-                "title": "Crear Vehículo",
-                "Tipo_combustibleEnum": Tipo_combustibleEnum,
-                "error_message": e.detail, 
-            },
-            status_code=e.status_code 
-        )
-    except Exception as e:
-        print(f"Error inesperado al crear vehículo: {e}") 
-        return templades.TemplateResponse(
-            "vehiculo_create.html",
-            {
-                "request": Request(scope={"type": "http"}), 
-                "title": "Crear Vehículo",
-                "Tipo_combustibleEnum": Tipo_combustibleEnum,
-                "error_message": f"Ocurrió un error inesperado al registrar el vehículo."
-            },
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+    
+    print(f"¿Se recibió una imagen? {vehiculo_form.imagen is not None}")
+    print(f"Tipo de contenido: {getattr(vehiculo_form.imagen, 'content_type', 'sin tipo')}")
+    print(f"Nombre de archivo: {getattr(vehiculo_form.imagen, 'filename', 'sin nombre')}")
+
+
+    imagen_url = None
+
+    if vehiculo_form.imagen:
+        resultado = await save_file(vehiculo_form.imagen, to_supabase=True)
+
+        if "url" in resultado:
+            imagen_url = resultado["url"]
+        else:
+            print("Error al subir imagen:", resultado.get("error"))
+
+    vehiculo_create = VehiculoCreate(
+        marca=vehiculo_form.marca,
+        modelo=vehiculo_form.modelo,
+        year=vehiculo_form.year,
+        Tipo_combustible=vehiculo_form.Tipo_combustible,
+        Tan_size=vehiculo_form.Tan_size,
+        imagen_url=imagen_url,
+    )
+    await crear_vehiculo_db(vehiculo_create, session)
+    return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
+
 
 @router.get("/vehiculos_registro", tags=["Vehículos"])
 async def vehiculos_registro_exitosa(request: Request):
@@ -135,15 +137,26 @@ async def editar_vehiculo_html(
 
 @router.post("/vehiculos/edit/{vehiculo_id}", tags=["Vehículos"])
 async def actualizar_vehiculo(
-    vehiculo_id : int,
-    vehiculo_data: VehiculoCreate = Depends(vehiculo_create_form),
+    vehiculo_id: int,
+    vehiculo_form: VehiculoCreateForm = Depends(),  # Igual que en crear
     session: AsyncSession = Depends(get_session)
 ):
-    vehiculo = await actualizar_vehiculo_db(vehiculo_id, vehiculo_data, session)
-    return RedirectResponse(
-        url="/vehiculos",
-        status_code=status.HTTP_303_SEE_OTHER
+    imagen_url = None
+    if vehiculo_form.imagen:
+        resultado = await save_file(vehiculo_form.imagen, to_supabase=True)
+        if "url" in resultado:
+            imagen_url = resultado["url"]
+
+    vehiculo_data = VehiculoCreate(
+        marca=vehiculo_form.marca,
+        modelo=vehiculo_form.modelo,
+        year=vehiculo_form.year,
+        Tipo_combustible=vehiculo_form.Tipo_combustible,
+        Tan_size=vehiculo_form.Tan_size,
+        imagen_url=imagen_url,  # Actualiza si hay nueva imagen
     )
+    await actualizar_vehiculo_db(vehiculo_id, vehiculo_data, session)
+    return RedirectResponse(url="/vehiculos", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get("/vehiculos/historial_eliminados", tags=["Vehiculos historial"])
 async def vehiculos_historial_html(
