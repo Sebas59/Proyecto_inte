@@ -63,6 +63,7 @@
                 <th scope="col">Año</th>
                 <th scope="col">Tipo de Combustible</th> 
                 <th scope="col">Tamaño del Tanque (Galones)</th> 
+                <th scope="col">Imagen</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -75,6 +76,13 @@
                 <td>{{ vehiculo.year }}</td>
                 <td>{{ vehiculo.Tipo_combustible.value }}</td> 
                 <td>{{ vehiculo.Tan_size }}</td> 
+                <td>
+                        {% if vehiculo.imagen_url %}
+                            <img src="{{ vehiculo.imagen_url }}" alt="Imagen de {{ vehiculo.marca }} {{ vehiculo.modelo }}" style="max-width: 100px; max-height: 100px; object-fit: cover; border-radius: 5px;">
+                        {% else %}
+                            No hay imagen
+                        {% endif %}
+                    </td>
                 <td>
                     <div class="d-flex justify-content-center align-items-center"> 
                         <a href="/vehiculos/edit/{{ vehiculo.id }}" class="btn btn-info btn-sm custom-hover-effect me-2">
