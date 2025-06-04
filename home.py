@@ -290,25 +290,73 @@ async def buscar_costo_tanqueo_html(
 
 @router.get("/combustibles", tags=["Combustibles"])
 async def combustible_list_html(
-    request: Request, 
+        request: Request,
     session: AsyncSession = Depends(get_session),
-    ciudad : Optional[str] = Query(None, description="Filtrar por ciudad del combustible"),
-    localidad: Optional[str] = Query(None, description="Filtrar por localidad del combustible")
-    ):
-    precios_combustible = await obtener_precio_combustible_db(
-        session=session,
-        ciudad=ciudad,
-        localidad=localidad
+    ciudad: Optional[str] = Query(None, description="Filtrar por ciudad (opcional)"),
+    localidad: Optional[str] = Query(None, description="Filtrar por localidad (opcional)"),
+    combustible_id: Optional[str] = Query(None, description="Filtrar por ID (opcional)") # Nuevo Query param
+):
+    current_ciudad = ciudad if ciudad else None
+    current_localidad = localidad if localidad else None
+    current_combustible_id = int(combustible_id) if combustible_id and combustible_id.isdigit() else None
+
+    error_message = None
+
+    try:
+        combustibles = await obtener_precio_combustible_db(
+            session=session,
+            ciudad=current_ciudad,
+            localidad=current_localidad,
+            combustible_id=current_combustible_id # Pasa el nuevo parámetro
         )
-    return templades.TemplateResponse("combustibles.html",
-     {
-        "request": request,
-        "precios_combustible": precios_combustible,
-        "title": "Lista de Combustibles",
-        "current_ciudad": ciudad,
-        "current_localidad": localidad,
-        "Tipo_combustibleEnum": Tipo_combustibleEnum
-    })
+
+        if not combustibles:
+            if current_ciudad or current_localidad or current_combustible_id:
+                error_message = "No se encontraron combustibles con los criterios de búsqueda."
+            else:
+                error_message = "No hay combustibles registrados en el sistema."
+
+        return templades.TemplateResponse(
+            "combustibles.html",
+            {
+                "request": request,
+                "combustibles": combustibles,
+                "Tipo_combustibleEnum": Tipo_combustibleEnum,
+                "current_ciudad": current_ciudad, # Pasa los filtros actuales a la plantilla
+                "current_localidad": current_localidad,
+                "current_combustible_id": current_combustible_id, # Pasa el ID actual a la plantilla
+                "error_message": error_message
+            }
+        )
+    except HTTPException as e:
+        return templades.TemplateResponse(
+            "combustibles.html",
+            {
+                "request": request,
+                "combustibles": [],
+                "Tipo_combustibleEnum": Tipo_combustibleEnum,
+                "current_ciudad": current_ciudad,
+                "current_localidad": current_localidad,
+                "current_combustible_id": current_combustible_id,
+                "error_message": e.detail
+            },
+            status_code=e.status_code
+        )
+    except Exception as e:
+        return templades.TemplateResponse(
+            "combustibles.html",
+            {
+                "request": request,
+                "combustibles": [],
+                "Tipo_combustibleEnum": Tipo_combustibleEnum,
+                "current_ciudad": current_ciudad,
+                "current_localidad": current_localidad,
+                "current_combustible_id": current_combustible_id,
+                "error_message": f"Error inesperado: {e}"
+            },
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
 
 @router.get("/combustible/crear", tags=["Combustibles"])
 async def combustible_create_html(request:Request, session:AsyncSession = Depends(get_session)):
