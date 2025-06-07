@@ -126,7 +126,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for vehiculo in vehiculos_disponibles %}
+                                {% for vehiculo in vehiculos_disponibles | sort(attribute='id')%}
                                     <tr>
                                         <td>{{ vehiculo.id }}</td>
                                         <td>{{ vehiculo.marca }}</td>
@@ -176,7 +176,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for combustible in combustibles_disponibles %}
+                                {% for combustible in combustibles_disponibles | sort(attribute='id') %}
                                     <tr>
                                         <td>{{ combustible.id }}</td>
                                         <td>{{ combustible.tipo_combustible }}</td>
