@@ -13,7 +13,7 @@
             <ul class="list-group list-group-flush mb-4">
                 <li class="list-group-item"><strong>Gestión de Vehículos:</strong>
                     <ul>
-                        <li>Registrar nuevo vehículo (marca, modelo, año, tipo combustible, tamaño tanque).</li>
+                        <li>Registrar nuevo vehículo (marca, modelo, año, tipo combustible, tamaño tanque, imagen del vehiculo).</li>
                         <li>Ver lista de vehículos (con filtros).</li>
                         <li>Editar información de vehículo.</li>
                         <li>Eliminar vehículo (moviéndolo a historial).</li>
@@ -38,7 +38,7 @@
                 <li class="list-group-item"><strong>Navegación:</strong>
                     <ul>
                         <li>Acceder a la página de inicio.</li>
-                        <li>Navegar a la lista de vehículos, precios de combustible, historiales y la sección "Conócenos".</li>
+                        <li>Navegar a la lista de vehículos, precios de combustible, historiales y la sección "Nosotros".</li>
                     </ul>
                 </li>
             </ul>
@@ -47,7 +47,7 @@
             <p>El siguiente diagrama representa la estructura de la base de datos y las relaciones entre las entidades principales del sistema, incluyendo los campos clave y sus tipos:</p>
             <div class="text-center my-4">
                 
-                <img src="{{ url_for('statics', path='img/Modelado_proyecto.png') }}" alt="Diagrama de Modelo de Datos de la Base de Datos" class="img-fluid rounded shadow-sm border" style="max-height: 500px; object-fit: contain;">
+                <img src="{{ url_for('statics', path='img/Modelado_ERD.png') }}" alt="Diagrama de Modelo de Datos de la Base de Datos" class="img-fluid rounded shadow-sm border" style="max-height: 500px; object-fit: contain;">
                 <small class="d-block text-muted mt-2">Diagrama de Entidad-Relación (ERD) del proyecto.</small>
             </div>
             <p>Se definen tablas para `Vehiculo`, `Combustible`, `VehiculoHistorico` y `CombustibleHistorico`, con relaciones claras para la gestión de datos.</p>
