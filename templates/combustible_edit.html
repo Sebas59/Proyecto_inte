@@ -4,8 +4,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="mb-4 text-primary">Editar Combustible</h1>
-
+    <h1 class="d-flex justify-content-between align-items-center mb-4">Editar Combustible</h1>
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
             <strong>Error:</strong> <span id="serverErrorMessage">{{ error_message }}</span>
@@ -13,8 +12,7 @@
     {% endif %}
 
     <div class="card shadow-sm p-4 mb-5 bg-white rounded">
-        <div class="card-body">
-            {# Add an ID to the form #}
+        <div class="card-body"> 
             <form id="editCombustibleForm" action="/combustibles/edit/{{ combustible.id }}" method="post">
                 <div class="mb-3">
                     <label for="ciudad" class="form-label">Ciudad:</label>
@@ -45,7 +43,7 @@
                     <input type="number" step="0.001" class="form-control" id="precio_por_galon" name="precio_por_galon" value="{{ combustible.precio_por_galon }}" min="0" placeholder="Ej: 15.500">
                 </div>
 
-                {# Add an ID to the submit button #}
+                
                 <button type="submit" id="submitUpdateCombustibleButton" class="btn btn-primary mt-3 custom-hover-effect">
                     <i class="bi bi-arrow-clockwise me-2"></i> Actualizar Combustible
                 </button>
@@ -58,33 +56,33 @@
 </div>
 
 <script>
-    // Get the form and the submit button
+    
     const form = document.getElementById('editCombustibleForm');
-    const submitButton = document.getElementById('submitUpdateCombustibleButton'); // Changed ID for clarity
-    const serverErrorMessage = document.getElementById('serverErrorMessage'); // Element to check for server-side errors
+    const submitButton = document.getElementById('submitUpdateCombustibleButton'); 
+    const serverErrorMessage = document.getElementById('serverErrorMessage'); 
 
-    // Function to disable the button and show loading state
+    
     function disableSubmitButton() {
         submitButton.disabled = true;
-        // Using innerHTML to include Bootstrap spinner
+        
         submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Actualizando...';
     }
 
-    // Function to re-enable the button and reset its state
+    
     function enableSubmitButton() {
         submitButton.disabled = false;
-        // Restore original icon and text
+        
         submitButton.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i> Actualizar Combustible';
     }
 
-    // Add event listener for form submission
+    
     form.addEventListener('submit', function() {
         disableSubmitButton();
     });
 
-    // Re-enable the button if there's a server-side error when the page loads
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Check if there's an error message displayed from the server
+        
         if (serverErrorMessage && serverErrorMessage.textContent.trim() !== '') {
             enableSubmitButton();
         }
