@@ -144,13 +144,13 @@ async def crear_vehiculo(
         error_message = e.detail
         return templades.TemplateResponse(
             "crear_vehiculo.html",
-            {"request": request, "error_message": error_message, "form_data": await request.form(), "Tipo_combustibleEnum": Tipo_combustibleEnum} # Pass Tipo_combustibleEnum back
+            {"request": request, "error_message": error_message, "form_data": await request.form(), "Tipo_combustibleEnum": Tipo_combustibleEnum} 
         )
     except Exception as e:
         error_message = f"Error inesperado: {e}"
         return templades.TemplateResponse(
             "crear_vehiculo.html",
-            {"request": request, "error_message": error_message, "form_data": await request.form(), "Tipo_combustibleEnum": Tipo_combustibleEnum} # Pass Tipo_combustibleEnum back
+            {"request": request, "error_message": error_message, "form_data": await request.form(), "Tipo_combustibleEnum": Tipo_combustibleEnum} 
         )
 
 
@@ -225,23 +225,71 @@ async def vehiculos_historial_html(
     request:Request,
     session:AsyncSession= Depends(get_session),
     marca: Optional[str] = Query(None, description="Filtrar por marca del vehículo eliminado"),
-    modelo: Optional[str] = Query(None, description="Filtrar por modelo del vehículo eliminado")
+    modelo: Optional[str] = Query(None, description="Filtrar por modelo del vehículo eliminado"),
+    historico_id: Optional[str] = Query(None, description="Filtrar por ID del registro histórico (opcional)")
       ):
-    vehiculo_historico = await obtener_vehiculo_historico_db(
-        session=session,
-        marca=marca,
-        modelo=modelo
+    current_marca = marca if marca else None
+    current_modelo = modelo if modelo else None
+    current_historico_id = int(historico_id) if historico_id and historico_id.isdigit() else None
+
+    error_message = None
+
+    try:
+        vehiculo_historico = await obtener_vehiculo_historico_db(
+            session=session,
+            marca=current_marca,
+            modelo=current_modelo,
+            historico_id=current_historico_id 
         )
-    return templades.TemplateResponse(
-        "vehiculos_historial.html",
-        {
-            "request" : request,
-            "vehiculos_historico" : vehiculo_historico,
-            "tittle" : "Historial de Vehiculos Eliminados",
-            "Tipo_combistibleEnum" : Tipo_combustibleEnum,
-            "current_marca" : marca,
-            "current_modelo" : modelo
-        }
+
+        if not vehiculo_historico:
+            if current_marca or current_modelo or current_historico_id:
+                error_message = "No se encontraron vehículos con los criterios de búsqueda."
+            else:
+                error_message = "No hay vehículos registrados en el sistema."
+
+        return templades.TemplateResponse(
+            "vehiculos_historial.html",
+            {
+                "request" : request,
+                "vehiculo_historico" : vehiculo_historico,
+                "title" : "Historial de Vehículos Eliminados",
+                "Tipo_combustibleEnum" : Tipo_combustibleEnum,
+                "current_marca" : current_marca,
+                "current_modelo" : current_modelo,
+                "current_historico_id": current_historico_id, 
+                "error_message": error_message
+            }
+        )
+    except HTTPException as e:
+         return templades.TemplateResponse(
+            "vehiculos_historial.html",
+            {
+                "request": request,
+                "vehiculos_historico": [],
+                "title": "Historial de Combustibles Eliminados",
+                "Tipo_combustibleEnum": Tipo_combustibleEnum,
+                "current_marca": current_marca,
+                "current_modelo": current_modelo,
+                "current_historico_id": current_historico_id,
+                "error_message": e.detail
+            },
+            status_code=e.status_code
+        )
+    except Exception as e:
+        return templades.TemplateResponse(
+            "vehiculos_historial.html",
+            {
+                "request": request,
+                "vehiculo_historico": [],
+                "title": "Historial de Vehiculos Eliminados",
+                "Tipo_combustibleEnum": Tipo_combustibleEnum,
+                "current_marca": current_marca,
+                "current_modelo": current_modelo,
+                "current_historico_id": current_historico_id, 
+                "error_message": f"Error inesperado: {e}"
+            },
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 @router.post("/vehiculos/restaurar/{historico_id}", tags=["Vehiculos historial"])
@@ -414,7 +462,7 @@ async def combustible_create_html(request:Request, session:AsyncSession = Depend
     })
 
 @router.post("/combustible/crear", tags=["Combustibles"]) 
-async def create_vehiculo(
+async def create_combustible(
     combustible_data: CombustibleCreate = Depends(combustible_create_form), 
     session: AsyncSession = Depends(get_session)
 ):
@@ -504,23 +552,71 @@ async def combustibles_historial_html(
     request:Request,
     session:AsyncSession= Depends(get_session),
     ciudad: Optional[str] = Query(None, description="Filtrar por ciudad del combustible eliminado"),
-    localidad: Optional[str] = Query(None, description="Filtrar por localidad del combustible eliminado")
+    localidad: Optional[str] = Query(None, description="Filtrar por localidad del combustible eliminado"),
+    historico_id: Optional[str] = Query(None, description="Filtrar por ID del registro histórico (opcional)") 
       ):
-    combustible_historico = await obtener_combustible_historico_db(
-        session=session,
-        ciudad=ciudad,
-        localidad=localidad
+    current_ciudad = ciudad if ciudad else None
+    current_localidad = localidad if localidad else None
+    current_historico_id = int(historico_id) if historico_id and historico_id.isdigit() else None 
+
+    error_message = None
+
+    try:
+        combustible_historico = await obtener_combustible_historico_db(
+            session=session,
+            ciudad=current_ciudad,
+            localidad=current_localidad,
+            historico_id=current_historico_id 
         )
-    return templades.TemplateResponse(
-        "combustible_historial.html",
-        {
-            "request" : request,
-            "combustible_historico" : combustible_historico,
-            "title" : "Historial de Combustibles Eliminados",
-            "tipo_combustibleEnum" : Tipo_combustibleEnum,
-            "current_ciudad" : ciudad,
-            "current_localidad" : localidad
-        }
+
+        if not combustible_historico:
+            if current_ciudad or current_localidad or current_historico_id:
+                error_message = "No se encontraron combustibles con los criterios de búsqueda."
+            else:
+                error_message = "No hay combustibles registrados en el sistema."
+
+        return templades.TemplateResponse(
+            "combustible_historial.html",
+            {
+                "request" : request,
+                "combustible_historico" : combustible_historico,
+                "title" : "Historial de Combustibles Eliminados",
+                "tipo_combustibleEnum" : Tipo_combustibleEnum,
+                "current_ciudad" : current_ciudad,
+                "current_localidad" : current_localidad,
+                "current_historico_id": current_historico_id, 
+                "error_message": error_message
+            }
+        )
+    except HTTPException as e:
+        return templades.TemplateResponse(
+            "combustible_historial.html",
+            {
+                "request": request,
+                "combustible_historico": [],
+                "title": "Historial de Combustibles Eliminados",
+                "tipo_combustibleEnum": Tipo_combustibleEnum,
+                "current_ciudad": current_ciudad,
+                "current_localidad": current_localidad,
+                "current_historico_id": current_historico_id, 
+                "error_message": e.detail
+            },
+            status_code=e.status_code
+        )
+    except Exception as e:
+        return templades.TemplateResponse(
+            "combustible_historial.html",
+            {
+                "request": request,
+                "combustible_historico": [],
+                "title": "Historial de Combustibles Eliminados",
+                "tipo_combustibleEnum": Tipo_combustibleEnum,
+                "current_ciudad": current_ciudad,
+                "current_localidad": current_localidad,
+                "current_historico_id": current_historico_id, 
+                "error_message": f"Error inesperado: {e}"
+            },
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 @router.post("/combustible/restaurar/{historico_id}", tags=["Combustibles historial"])
