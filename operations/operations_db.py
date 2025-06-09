@@ -124,8 +124,9 @@ async def retaurar_vehiculo_db(historico_id:int, session:AsyncSession):
 async def obtener_vehiculo_historico_db(
         session:AsyncSession,
         marca : Optional[str] = None,
-        modelo : Optional[str] = None
-        ):
+        modelo : Optional[str] = None,
+        historico_id: Optional[int] = None
+        )-> List[VehiculoHistorico]:
     query = select(VehiculoHistorico)
     conditions = []
 
@@ -133,6 +134,8 @@ async def obtener_vehiculo_historico_db(
         conditions.append(VehiculoHistorico.marca.ilike(f"%{marca}%"))
     if modelo:
         conditions.append(VehiculoHistorico.modelo.ilike(f"%{modelo}%"))
+    if historico_id:
+        conditions.append(VehiculoHistorico.id == historico_id)
 
     if conditions:
         query = query.where(and_(*conditions))
@@ -324,7 +327,8 @@ async def restaurar_combustible_db(historico_id: int, session: AsyncSession) -> 
 async def obtener_combustible_historico_db(
     session: AsyncSession,
     ciudad: Optional[str] = None,
-    localidad: Optional[str] = None
+    localidad: Optional[str] = None,
+    historico_id: Optional[int] = None
 ) -> List[CombustibleHistorico]:
    
     query = select(CombustibleHistorico)
@@ -334,7 +338,8 @@ async def obtener_combustible_historico_db(
         conditions.append(CombustibleHistorico.ciudad.ilike(f"%{ciudad}%"))
     if localidad:
         conditions.append(CombustibleHistorico.localidad.ilike(f"%{localidad}%"))
-
+    if historico_id:
+        conditions.append(CombustibleHistorico.id == historico_id)
     if conditions:
         query = query.where(and_(*conditions))
 
