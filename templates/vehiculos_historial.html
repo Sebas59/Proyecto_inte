@@ -36,8 +36,8 @@
                     <input type="text" class="form-control" id="modelo" name="modelo" value="{{ current_modelo if current_modelo is not none else '' }}">
                 </div>
                 <div class="col-md-4">
-                    <label for="vehiculo_id" class="form-label">ID del vehiculo:</label>
-                    <input type="number" class="form-control" id="vehiculo_id" name="vehiculo_id" placeholder="Ej: 1" value="{{ current_year if current_year is not none else '' }}">
+                    <label for="historico_id" class="form-label">ID del vehiculo:</label>
+                    <input type="number" class="form-control" id="historico_id" name="historico_id" placeholder="Ej: 1" value="{{ current_historico_id if current_historico_id is not none else '' }}">
                 </div>
                 
                 <div class="col-12 d-flex align-items-end"> 
@@ -53,14 +53,18 @@
     </div>
 </div>
 
-{% if request.query_params.get('error_message') %}
+{% if error_message %}
     <div class="alert alert-danger" role="alert">
-        {{ request.query_params.get('error_message') }}
+        {{ error_message }}
+    </div>
+{% elif not vehiculo_historico %} {# Muestra este mensaje solo si no hay error_message y la lista está vacía #}
+    <div class="alert alert-info mt-3" role="alert">
+        No hay Vehiculos eliminados en el historial aún.
     </div>
 {% endif %}
 
 
-{% if vehiculos_historico %}
+{% if vehiculo_historico %}
 <div class="table-responsive">
     <table class="table table-striped table-hover table-bordered align-middle table-sm">
         <thead class="table-dark">
@@ -72,14 +76,14 @@
                 <th scope="col">Año</th>
                 <th scope="col">Tipo de Combustible</th>
                 <th scope="col">Tamaño del Tanque</th>
-                <th scope="col">Imagen</th> {# ¡NUEVA COLUMNA! #}
+                <th scope="col">Imagen</th> 
                 <th scope="col">Acciones</th> 
             </tr>
         </thead>
         <tbody>
-            {% for vehiculo_hist in vehiculos_historico %}
+            {% for vehiculo_hist in vehiculo_historico | sort(attribute='id') %}
             <tr>
-                <th scope="row">{{ loop.index }}</th>
+                <th scope="row">{{ vehiculo_hist.id }}</th>
                 <td>{{ vehiculo_hist.original_id }}</td>
                 <td>{{ vehiculo_hist.marca }}</td>
                 <td>{{ vehiculo_hist.modelo }}</td>
@@ -92,7 +96,7 @@
                     {% else %}
                         No disponible
                     {% endif %}
-                </td> {# ¡CONTENIDO DE LA NUEVA COLUMNA! #}
+                </td> 
                 <td>
                     <form action="/vehiculos/restaurar/{{ vehiculo_hist.id }}" method="post" 
                             onsubmit="return confirm('¿Estás seguro de que quieres restaurar este vehículo?');"
@@ -107,10 +111,6 @@
         </tbody>
     </table>
 </div>
-{% else %}
-    <div class="alert alert-info mt-3" role="alert">
-        No hay vehículos eliminados en el historial aún.
-    </div>
 {% endif %}
 <a href="/vehiculos" class="btn btn-primary custom-hover-effect mt-3">
     <i class="bi bi-arrow-left-circle-fill me-2"></i> Volver a Vehiculos
