@@ -55,11 +55,13 @@
             <h2 class="jumbotron bg-light p-4 rounded shadow-sm"><i class="bi bi-signpost-2-fill me-2"></i> Objetivos Propuestos y Fuente de los Datos</h2>
             <p>Los objetivos principales del proyecto fueron:</p>
             <ul class="list-group list-group-flush mb-4">
-                <li class="list-group-item">Ofrecer una solución sencilla y accesible para que los usuarios gestionen sus vehículos y el consumo de combustible.</li>
-                <li class="list-group-item">Permitir la trazabilidad de vehículos y precios de combustible, incluso después de ser "eliminados" lógicamente.</li>
-                <li class="list-group-item">Proporcionar una interfaz de usuario limpia e intuitiva que mejore la experiencia del usuario.</li>
-                <li class="list-group-item">Demostrar el uso de FastAPI con SQLModel para un desarrollo backend robusto y eficiente.</li>
-                <li class="list-group-item">Implementar un diseño frontend responsivo con Bootstrap para compatibilidad multidispositivo.</li>
+                <li class="list-group-item">Gestionar Vehículos: Permitir la creación, lectura, actualización y eliminación (CRUD) de información detallada sobre vehículos de combustión, incluyendo marca, modelo, año, tipo combustible y tamaño del tanque.</li>
+                <li class="list-group-item">Gestionar Combustibles: Habilitar el CRUD de precios de combustible, asociados a una ciudad, localidad y tipo de combustible específico.</li>
+                <li class="list-group-item">Calcular Costos de Tanqueo: Proporcionar una funcionalidad para estimar el costo total de llenar el tanque de un vehículo específico, basándose en el tamaño del tanque y el precio del combustible en una ubicación y tipo dados</li>
+                <li class="list-group-item">Almacenamiento de Imágenes: Integrar un servicio de almacenamiento en la nube (Supabase Storage) para asociar imágenes a los vehículos.</li>
+                <li class="list-group-item">Historial de Cambios: Mantener un registro histórico de las modificaciones realizadas tanto en la información de los vehículos como en los precios de los combustibles.</li>
+                <li class="list-group-item">Interfaz de Usuario Intuitiva: Desarrollar una interfaz web amigable que facilite la interacción de los usuarios con el sistema.</li>
+                <li class="list-group-item">Despliegue en la Nube: Asegurar que la aplicación y su base de datos sean desplegables en plataformas de nube (Render) para garantizar accesibilidad y escalabilidad.</li>
             </ul>
             <p>La fuente de los datos para los precios de combustible se espera que provenga de una "entrada manual del usuario",
                 simulando la recopilación de información de diferentes ciudades y localidades. Para los datos de vehículos, 
