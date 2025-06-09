@@ -8,44 +8,43 @@
     <h1>Historial de Combustibles Eliminados</h1>
 </div>
 
-
 <div class="card mb-4 shadow-sm">
     <div class="card-header btn-primary">
         <h5 class="mb-0">
-            <button class="btn btn-link text-white text-decoration-none w-100 text-start d-flex justify-content-between align-items-center" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#collapseFilters" 
-                    aria-expanded="{% if current_ciudad or current_localidad %}true{% else %}false{% endif %}" 
+            <button class="btn btn-link text-white text-decoration-none w-100 text-start d-flex justify-content-between align-items-center"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseFilters"
+                    aria-expanded="{% if current_ciudad or current_localidad %}true{% else %}false{% endif %}"
                     aria-controls="collapseFilters">
                 <i class="bi bi-funnel-fill me-2"></i> Filtros de Combustible
-                <i class="bi {% if current_ciudad or current_localidad %}bi-chevron-up{% else %}bi-chevron-down{% endif %} collapse-icon"></i> 
+                <i class="bi {% if current_ciudad or current_localidad %}bi-chevron-up{% else %}bi-chevron-down{% endif %} collapse-icon"></i>
             </button>
         </h5>
     </div>
-    <div id="collapseFilters" class="collapse {% if current_ciudad or current_localidad %}show{% endif %}"> 
+    <div id="collapseFilters" class="collapse {% if current_ciudad or current_localidad %}show{% endif %}">
         <div class="card-body">
             <form action="/combustible/historial_eliminados" method="get" class="row g-3 align-items-end">
-                <div class="col-md-4"> 
+                <div class="col-md-4">
                     <label for="ciudad" class="form-label">Ciudad:</label>
                     <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{ current_ciudad if current_ciudad is not none else '' }}">
                 </div>
-                <div class="col-md-4"> 
+                <div class="col-md-4">
                     <label for="localidad" class="form-label">Localidad:</label>
                     <input type="text" class="form-control" id="localidad" name="localidad" value="{{ current_localidad if current_localidad is not none else '' }}">
                 </div>
 
-                <div class="col-md-4"> 
-                    <label for="combustible_id" class="form-label">ID del combustible:</label>
-                    <input type="text" class="form-control" id="combustible_id" name="combustible_id" placeholder="Ej: 1" value="{{ id_buscado if id_buscado is not none else '' }}">
+                <div class="col-md-4">
+                    <label for="historico_id" class="form-label">ID del combustible:</label>
+                    <input type="text" class="form-control" id="historico_id" name="historico_id" placeholder="Ej: 1" value="{{ current_historico_id if current_historico_id is not none else '' }}">
                 </div>
-                
-                <div class="col-12 d-flex align-items-end"> 
+
+                <div class="col-12 d-flex align-items-end">
                     <button type="submit" class="btn btn-success custom-hover-effect me-2">
                         <i class="bi bi-funnel-fill me-2"></i> Aplicar Filtros
                     </button>
-                    <a href="/combustible/historial_eliminados" class="btn btn-secondary custom-hover-effect me-2"> 
-                        <i class="bi bi-x-circle me-2"></i> Limpiar Filtros 
+                    <a href="/combustible/historial_eliminados" class="btn btn-secondary custom-hover-effect me-2">
+                        <i class="bi bi-x-circle me-2"></i> Limpiar Filtros
                     </a>
                 </div>
             </form>
@@ -53,10 +52,13 @@
     </div>
 </div>
 
-
-{% if request.query_params.get('error_message') %}
+{% if error_message %}
     <div class="alert alert-danger" role="alert">
-        {{ request.query_params.get('error_message') }}
+        {{ error_message }}
+    </div>
+{% elif not combustible_historico %} 
+    <div class="alert alert-info mt-3" role="alert">
+        No hay combustibles eliminados en el historial aún.
     </div>
 {% endif %}
 
@@ -66,26 +68,26 @@
     <table class="table table-striped table-hover table-bordered align-middle table-sm">
         <thead class="table-dark">
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">ID Registro historico</th>
                 <th scope="col">ID Original</th>
                 <th scope="col">Ciudad</th>
                 <th scope="col">Localidad</th>
                 <th scope="col">Tipo de Combustible</th>
                 <th scope="col">Precio por galones</th>
-                <th scope="col">Acciones</th> 
+                <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for combustible_hist in combustible_historico %}
+            {% for combustible_hist in combustible_historico | sort(attribute='id')%}
             <tr>
-                <th scope="row">{{ loop.index }}</th>
+                <th scope="row">{{ combustible_hist.id }}</th>
                 <td>{{ combustible_hist.original_id }}</td>
                 <td>{{ combustible_hist.ciudad }}</td>
                 <td>{{ combustible_hist.localidad }}</td>
                 <td>{{ combustible_hist.tipo_combustible.value }}</td>
                 <td>{{ combustible_hist.precio_por_galon }}</td>
                 <td>
-                    <form action="/combustible/restaurar/{{ combustible_hist.id }}" method="post" 
+                    <form action="/combustible/restaurar/{{ combustible_hist.id }}" method="post"
                           onsubmit="return confirm('¿Estás seguro de que quieres restaurar este combustible?');"
                           class="d-inline-block p-0 m-0 border-0 bg-transparent">
                         <button type="submit" class="btn btn-success btn-sm custom-hover-effect">
@@ -98,12 +100,8 @@
         </tbody>
     </table>
 </div>
-{% else %}
-    <div class="alert alert-info mt-3" role="alert">
-        No hay combustibles eliminados en el historial aún.
-    </div>
-{% endif %}
-<a href="/combustibles" class="btn btn-primary custom-hover-effect mt-3"> 
+{% endif %} 
+<a href="/combustibles" class="btn btn-primary custom-hover-effect mt-3">
     <i class="bi bi-arrow-left-circle-fill me-2"></i> Volver a Combustibles
 </a>
 {% endblock %}
